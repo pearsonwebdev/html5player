@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+	<title>Untitled</title>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    
+    <!-- HTML5 Player Styles and Code ............ -->
+    <link href="/release/html-content-player.min.css" rel="stylesheet" type="text/css" />
+    <script src="/release/html-content-player.min.js"></script>
+
+
+<!--Adobe Edge Runtime-->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script type="text/javascript" charset="utf-8" src="symbol-test_edgePreload.js"></script>
+    <style>
+        .edgeLoad-EDGE-126256608 { visibility:hidden; }
+    </style>
+<!--Adobe Edge Runtime End-->
+
+    <style type="text/css">
+
+        body {
+            background-color: #596B7C;
+        }
+        #player-base {
+            margin: 20px auto;
+        }
+
+    </style>
+
+</head>
+<body style="margin:0;padding:0;">
+
+    <div id="player-base">
+        <audio id="narration" audio preload="auto" autobuffer>
+          <source src="Narration.ogg" type="audio/ogg"/>
+          <source src="Narration.mp3" type="audio/mpeg"/>
+        </audio>
+        <div id="Stage" class="EDGE-126256608"></div>
+    </div>
+
+
+    <script>
+        (function($){
+
+          var stage;
+
+          AdobeEdge.bootstrapCallback(function (compId) {
+            stage = AdobeEdge.getComposition(compId).getStage();
+            $('#player-base').htmlcontentplayer({duration: 10, 
+                                                 playableElement: stage,
+                                                 triggerOnSync: false//,  // Stop player from firing played/paused events during audio sync
+                                                 //played: playerPlayed,
+                                                 //paused: playerPaused
+                                             });
+          });
+
+          // Handle Player Events ---
+
+          function playerPlayed(e, time) {
+            // Get all symbols, if they are visible, play them.
+            var childSymbols = stage.getChildSymbols();
+            var stageTime = stage.getPosition();
+
+            for(var i=0; i<childSymbols.length; i++) {
+                var symbol = childSymbols[i];
+
+                if (symbol.getSymbolElement().is(':visible')) {
+                    if (time) {
+                        var symbolTime = symbol.getPosition();
+                        var symbolTimeDiff = stageTime - symbolTime;
+                        var newSymbolTime = time - symbolTimeDiff;
+
+                        symbol.play(newSymbolTime);
+                    }
+                    else {
+                        symbol.play();                        
+                    }
+                }
+            }
+          }
+
+          function playerPaused(e, time) {
+            // Get all symbols and stop them (no need to check visibility here)
+            var childSymbols = stage.getChildSymbols();
+
+            for(var i=0; i<childSymbols.length; i++) {
+                var symbol = childSymbols[i];
+                if (time) {
+                    symbol.stop(time);                        
+                }
+                else {
+                    symbol.stop();                        
+                }
+            }
+          }
+
+        })(jQuery);
+    </script>
+
+</body>
+</html>

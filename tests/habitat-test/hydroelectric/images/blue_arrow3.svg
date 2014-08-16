@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.4, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="55.289px" height="38.804px" viewBox="436.203 357.711 55.289 38.804"
+	 enable-background="new 436.203 357.711 55.289 38.804" xml:space="preserve">
+<g id="Guide" opacity="0.83">
+</g>
+<g id="White">
+</g>
+<g id="Bitmap">
+</g>
+<g>
+	<path fill="#2EA0D9" d="M479.692,390.991h-2.694c-8.492,0-18.568-8.88-18.993-9.257l-21.802-21.461l2.521-2.562l21.736,21.396
+		c0.027,0.021,9.415,8.287,16.538,8.287h2.694V390.991L479.692,390.991z"/>
+</g>
+<g>
+	<polygon fill="#2EA0D9" points="474.14,396.515 477.249,389.193 474.14,381.874 491.492,389.193 	"/>
+</g>
+<g id="Leaders">
+</g>
+<g id="Text">
+</g>
+<g id="FPO_Numbered_Steps" display="none">
+	<g display="inline">
+		<g>
+			<circle fill="#3C434D" cx="368.5" cy="197.333" r="16.334"/>
+		</g>
+		<text transform="matrix(1 0 0 1 363 203.833)" fill="#FFFFFF" font-family="'HelveticaLTStd-Roman'" font-size="19">1</text>
+	</g>
+	<g display="inline">
+		<g>
+			<circle fill="#3C434D" cx="535.5" cy="263.618" r="16.334"/>
+		</g>
+		<text transform="matrix(1 0 0 1 530 270.1182)" fill="#FFFFFF" font-family="'HelveticaLTStd-Roman'" font-size="19">3</text>
+	</g>
+	<g display="inline">
+		<g>
+			<circle fill="#3C434D" cx="493.167" cy="382.333" r="16.334"/>
+		</g>
+		<text transform="matrix(1 0 0 1 487.668 388.833)" fill="#FFFFFF" font-family="'HelveticaLTStd-Roman'" font-size="19">2</text>
+	</g>
+	<g display="inline">
+		<g>
+			<circle fill="#3C434D" cx="572.75" cy="167.833" r="16.334"/>
+		</g>
+		<text transform="matrix(1 0 0 1 567.251 174.333)" fill="#FFFFFF" font-family="'HelveticaLTStd-Roman'" font-size="19">4</text>
+	</g>
+</g>
+</svg>

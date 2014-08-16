@@ -1,0 +1,98 @@
+/* jshint options for code standards */
+{
+    // Enforcing Options
+    "bitwise": true,
+    "camelcase": true,
+    "curly": true,
+    "eqeqeq": true,
+    "es3": false,
+    "forin": true,
+    "freeze": false,
+    "immed": true,
+    "indent": 4,
+    "latedef": "nofunc",
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonew": true,
+    "plusplus": false,
+    "quotmark": "single",
+    "undef": true,
+    "unused": false,
+    "strict": true,
+    "trailing": true,
+    "maxparams": false,
+    "maxdepth": false,
+    "maxstatements": false,
+    "maxcomplexity": false,
+    "maxlen": false,
+
+    // Relaxing Options
+    "asi": false,
+    "boss": false,
+    "debug": false,
+    "eqnull": true,
+    "esnext": false,
+    "evil": false,
+    "expr": false,
+    "funcscope": false,
+    "gcl": false,
+    "globalstrict": false,
+    "iterator": false,
+    "lastsemic": false,
+    "laxbreak": false,
+    "laxcomma": false,
+    "loopfunc": false,
+    "maxerr": false,
+    "moz": false,
+    "multistr": false,
+    "notypeof": false,
+    "proto": false,
+    "scripturl": false,
+    "smarttabs": false,
+    "shadow": false,
+    "sub": false,
+    "supernew": false,
+    "validthis": false,
+    "noyield": false,
+
+    // Environment
+    "browser": true,
+    "couch": false,
+    "devel": false,
+    "dojo": false,
+    "jquery": true,
+    "mootools": false,
+    "node": true,
+    "nonstandard": false,
+    "phantom": false,
+    "prototypejs": false,
+    "rhino": false,
+    "worker": false,
+    "wsh": false,
+    "yui": false,
+
+    // Globals
+    "globals" : {
+
+        // Require
+        "define": false,
+
+        // Jasmine
+        "describe": false,
+        "expect": false,
+        "beforeEach": false,
+        "afterEach": false,
+        "it": false,
+        "runs": false,
+        "waits": false,
+        "waitsFor": false,
+        "spyOn": false,
+
+        // Jasmine-JQuery
+        "setFixtures": false,
+        "loadFixtures": false,
+        "appendSetFixtures": false
+        
+    }
+}

@@ -1,0 +1,5 @@
+# OSX
+.DS_Store
+
+# Node for JS libraries
+node_modules

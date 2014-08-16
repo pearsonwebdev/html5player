@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>Geoscience Animation</title>
+	    <link rel="stylesheet" type="text/css" media="screen" href="/release/html-content-player.min.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="../css/styles.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="../css/html-content-player-fixes.css" />
+
+		<link href="../css/bootstrap.css" rel="stylesheet">
+		<link href="../css/bootstrap-responsive.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="../css/template.css" />
+		<link rel="stylesheet" href="../css/template-short-instruction.css" />
+
+		<script src="../js/jquery-1.8.3.js"></script>
+		<script src="../js/jquery-ui-1.9.2.min.js"></script>
+		<script src="../js/modernizr.js"></script>
+
+		<!-- jquery + jquery-ui for the media player -->
+		<script src="edge_includes/three.min.js"></script>
+		<script src="edge_includes/tween.min.js"></script>
+		<script src="../texturesheetanim/texturesheetanim.js"></script>
+
+		<!--Adobe Edge Runtime-->
+	    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+	    <script type="text/javascript" charset="utf-8" src="gulf-stream-meanders_edgePreload.js"></script>
+	    <style>
+	        .edgeLoad-EDGE-2305382 { visibility:hidden; }
+	    </style>
+		<!--Adobe Edge Runtime End-->
+
+    	<script src="/release/html-content-player.min.js"></script>
+		<script src="app.js"></script>
+		<script src="../js/template.js"></script>
+	</head>
+
+
+	<body lang="en" class="short-instructions">
+		<div id="template-page-wrap">
+
+			<h1 >Geoscience Animation</h1>
+
+			<div class="row-fluid inline template-container" role="banner">
+				<div id="breadcrumbs">
+					
+				</div>
+			</div>
+
+			<div class="row-fluid html5-media-row template-container template-short-instructions" role="main" aria-labelledby="instruction-title">
+				<div class="instruction-container">
+					<h2 id="instruction-title">The Gulf Stream: Its Meanders and Cold and Warm Core Eddies</h2>
+					<p>Press play to watch the video.</p>
+				</div>
+				<div id="animation-container">
+					<!-- 
+					<iframe id="animation-iframe" class="template-animation" src="gulf-stream-meanders/meanders-animation.html" width="638" height="523" title="Gulf Stream Animation" ></iframe>
+					-->
+				  <div id="player-base" tabindex="1">
+				    <audio id="narration" audio preload="auto" autobuffer>
+				      <source src="images/Narration.ogg" type="audio/ogg"/>
+				      <source src="images/Narration.mp3" type="audio/mpeg"/>
+				    </audio>
+				    <div id="Stage" class="EDGE-2305382 animation"></div>
+				  </div>
+				</div>
+			</div>			
+
+			<div class="row-fluid template-container template-study-materials" role="complementary" aria-labelledby="study-materials-title">
+				<h2 id="study-materials-title" class="banner">Transcript</h2>
+
+				<div class="row-fluid">
+					<div id="transcript" class="span12">
+						<p>
+							Located off of the East Coast of the United States is one of the world’s most powerful current systems, the Gulf Stream. It distributes a large amount of warm water from the Gulf of Mexico and Caribbean Sea northward to the North Atlantic Ocean. 
+						</p>
+
+						<p>
+							Data from Earth-orbiting satellites equipped with Advanced Very High Resolution Radiometers can be used to determine sea surface temperatures. In this false-color image, red and orange colors indicate warm ocean water, while blue and purple indicate colder water. The Gulf Stream is visible as a sinuous band of red, wrapping around the southern tip of Florida, moving up the eastern seaboard where it changes color to yellow and then flows into the waters of the North Atlantic Ocean. 
+
+						</p><p>
+							The position of the Gulf Stream varies once it passes Cape Hatteras North Carolina. In this simplified map view, the Gulf Stream can be seen changing its position and wiggling around in a snake-like fashion. These fluctuations create curving loops of water known as meanders, similar to those seen in the shapes of streams on land. 
+						</p>
+						
+						<p>
+							The ocean transfers heat in a similar fashion as our atmosphere, through something akin to storms. These ocean storms are known as eddies. The Gulf Stream produces eddies that spin off of the primary current path and move heat outward. Eddies can either have a cold core, where the water at its center is cold, or a warm core, where there is warm water at its center. 
+						</p>
+						
+						<p>
+							Eddies are formed when rings are pinched off as the Gulf Stream meanders. The direction that the eddy pinches off determines whether it has a cold core or a warm core. If the eddy pinches off into the warm water to the south, cold water is captured at its core. On the other hand, if the eddy pinches off into the colder water to the north, it captures warm water at its core. These eddies sometimes last for several months, providing a unique ecosystem for marine life. Eventually, the eddies dissipate into the surrounding water, or, in some cases, they rejoin the Gulf Stream. 
+						</p>
+
+						<p>
+							The Gulf Stream moves an impressive amount of water and heat into the northern latitudes. As it does so, it directly affects weather and climate patterns over the entire globe.
+						</p>
+
+					</div>
+				</div>
+
+				<div class="row-fluid">
+					<a id="download-transcript-link" download="meanders-transcript.html" href="meanders-transcript.html">Download Transcript</a>
+				</div>
+			</div>
+
+			<div id="foot" class="row-fluid inline template-container" role="contentinfo">
+	            <img id="foot-left"  src="../img/always-learning-35px-2.png" alt="Always Learning">
+	            <img id="foot-right" src="../img/pearson-35px-2.png" alt="Pearson" >
+			</div>
+		</div>
+	</body>
+</html>

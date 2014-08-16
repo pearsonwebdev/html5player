@@ -1,0 +1,3 @@
+FOR IE:
+export at 180DPI using inkscape.
+Any files named *2.svg were modified with inkscape before rendering, use those.
