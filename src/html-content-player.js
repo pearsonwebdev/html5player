@@ -429,22 +429,31 @@
     }
 
 
-    function playAll(newTime, symbol) {
+    function playAll(newTime, symbol, isReverse) {
       //  Support for:
       //    + Play
-      //    - playFrom
-      //    - playReverse
+      //    - playFrom time
+      //    - playFrom label
+      //    + playReverse
+      //    - playReverse, stopped prematurely
       //    + play triggers from correct time after seek
       //    + multiple trigger scenarios on the same symbol?
       //    + looping symbols (action within to go to a position) - we stop these, but can't play
       //    + prematurely stopped symbol (with trigger)
       //    + grandchildren
       //    - auto play?
+      //    - stop at time
+      //    - stop at label
 
       symbol = symbol || _stage;
       newTime = newTime || symbol.getPosition();
 
-      symbol.play(newTime);
+      if (isReverse) {
+        symbol.playReverse(newTime);
+      }
+      else {
+        symbol.play(newTime);
+      }
 
       // Get child symbols that should be playing right now (based on their trigger values)
       var playableSymbols = getPlayableSymbols(newTime, symbol);
@@ -453,12 +462,18 @@
       for (var k = 0, len = playableSymbols.length; k < len; k++) {
         var childSymbol = playableSymbols[k].symbol;
         var triggerPosition = playableSymbols[k].position;
+        var childIsReverse = playableSymbols[k].isReverse;
 
-        // get the child's 
+        // figure out what time the child needs to play from
         var childNewTime = newTime - triggerPosition;
 
+        // if the symbol was played in reverse, figure out that time
+        if (childIsReverse) {
+          childNewTime = childSymbol.getDuration() - childNewTime;
+        }
+
         // Play the symbol and its children
-        playAll(childNewTime, childSymbol);
+        playAll(childNewTime, childSymbol, childIsReverse);
       }
     }
 
@@ -475,9 +490,15 @@
       for (var k = 0, len = playableSymbols.length; k < len; k++) {
         var childSymbol = playableSymbols[k].symbol;
         var triggerPosition = playableSymbols[k].position;
+        var isReverse = playableSymbols[k].isReverse;
 
-        // get the child's 
+        // figure out what time the child needs to play from
         var childNewTime = newTime - triggerPosition;
+
+        // if the symbol was played in reverse, figure out that time
+        if (isReverse) {
+          childNewTime = childSymbol.getDuration() - childNewTime;
+        }
 
         // stop the symbol and its children
         stopAll(childNewTime, childSymbol);
@@ -493,7 +514,10 @@
       // calculate the time that they should play from.
       var playableSymbols = [];
 
-      // get all of the timelines for this symbol, sort them by position
+      // temporary collection of symbols that were triggered in reverse
+      var revSymbolPositions = [];
+
+      // get all of the timelines for this symbol, sort them by "position", aka time.
       var timelines = symbol.timelines['Default Timeline'].timeline.sort();
 
       // Go through the timeline and focus on triggers (as opposed to tweens)
@@ -501,34 +525,62 @@
         var timeline = timelines[i];
         if (!timeline.trigger) continue;
 
+        // Get the trigger data, this is somewhat brittle but Edge does not give us helpers to retrieve this info.
+        var triggerData = timeline.trigger[1];
+
         // Get the action (play, stop) from the trigger. How we are doing this is brittle. Unfortunately Edge does not give us any helpers here.
-        var triggerAction = timeline.trigger[1][0];
+        var triggerAction = triggerData[0];
 
         // Get the selector name from the trigger (strip off extra junk)
-        var selector = timeline.trigger[1][1].replace(/[\$\{\}]/g, '').replace(/^_/, '');
+        var selector = triggerData[1];
         var triggerSymbol = symbol.getSymbol(selector);
+
+        var isReverse = (triggerAction === 'playReverse');
+
+        if (isReverse) {
+          revSymbolPositions[selector] = timeline.position;
+        }
 
         if (triggerAction === 'play' || triggerAction === 'playReverse') {
 
-          var timelineEnd = timeline.position + triggerSymbol.getDuration();
+          var playFromTime = 0;
 
-          // if the newTime falls within the symbol, add the symbol name to the array of symbols to play.
-          // TODO: take into account stop triggers
-          if (newTime > timeline.position && newTime < timelineEnd) {
-            // TODO: check if duplicate, only push if not.
-            playableSymbols.push({ symbol: triggerSymbol,
-                                   position: timeline.position });
+          // index 2 is the playFrom time or label
+          if (triggerData[2].length > 0) {
+
+            // The actual value is also an array, we'll use index 0. I've never been able to produce a usecase where it contains more than a single value.
+            if (typeof triggerData[2][0] === 'string') {
+              // look up the label
+              var labels = triggerSymbol.getTimelineData('Default Timeline').labels;
+              if (labels) {
+                playFromTime = labels[triggerData[2][0]];
+              }
+            }
+            else {
+              playFromTime = triggerData[2][0];
+            }
+
           }
 
+          var timelineStart = timeline.position - playFromTime;
+          var timelineEnd = timelineStart + triggerSymbol.getDuration();
+
+          // if the newTime falls within the symbol, add the symbol to the array of symbols to play.
+          if (newTime > timeline.position && newTime < timelineEnd) {
+
+            playableSymbols.push({ symbol: triggerSymbol,
+                                   position: timelineStart,
+                                   isReverse: isReverse });
+          }
           // if the newTime is before the symbol, set the symbol time to 0
           else if (newTime <= timeline.position) {
-            triggerSymbol.seek(0);
+            var beforeTime = (isReverse) ? triggerSymbol.getDuration() : 0; 
+            triggerSymbol.seek(beforeTime);
           }
-
           // if the newTime is after the symbol, set the symbol time to the duration
-          // TODO: take into account stop triggers
           else if (newTime >= timelineEnd) {
-            triggerSymbol.seek(timelineEnd);
+            var afterTime = (isReverse) ? 0 : triggerSymbol.getDuration(); 
+            triggerSymbol.seek(afterTime);
           }
         }
 
@@ -536,8 +588,11 @@
 
           if (newTime > timeline.position) {
             
+            // Get the position to stop at, take into account if the symbol is playing in reverse
+            var symbolPosition = (revSymbolPositions[selector]) ? triggerSymbol.getDuration() - timeline.position + revSymbolPositions[selector] : timeline.position;
+
             // Make symbol's time match the stop trigger time
-            triggerSymbol.seek(timeline.position);
+            triggerSymbol.seek(symbolPosition);
 
             // Remove the symbol from the playableSymbol's array (if its there)
             for (var k=0; k < playableSymbols.length; k++) {
