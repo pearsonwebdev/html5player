@@ -29,14 +29,14 @@ var symbols = {
             {
                 id: 'Background',
                 type: 'rect',
-                rect: ['0px', '1px','638px','539px','auto', 'auto'],
+                rect: ['0px', '1px','638px','572px','auto', 'auto'],
                 fill: ["rgba(201,199,196,1.00)"],
                 stroke: [0,"rgba(0,0,0,1)","solid"]
             },
             {
                 id: 'stage-playhead',
                 type: 'rect',
-                rect: ['34px', '45px','0px','484px','auto', 'auto'],
+                rect: ['34px', '45px','0px','522px','auto', 'auto'],
                 fill: ["rgba(185,182,173,1)"],
                 stroke: [1,"rgba(225,2,2,1.00)","solid"]
             },
@@ -115,6 +115,13 @@ var symbols = {
                 stroke: [1,"rgba(78,81,84,1.00)","solid"]
             },
             {
+                id: 'RectangleCopy2',
+                type: 'rect',
+                rect: ['433px', '460px','0px','20px','auto', 'auto'],
+                fill: ["rgba(185,182,173,1)"],
+                stroke: [1,"rgba(78,81,84,1.00)","solid"]
+            },
+            {
                 id: 'sym-full-manual-stopped',
                 type: 'rect',
                 rect: ['34px', '171px','auto','auto','auto', 'auto'],
@@ -168,29 +175,43 @@ var symbols = {
                 type: 'text',
                 rect: ['43px', '403px','auto','auto','auto', 'auto'],
                 opacity: 1,
-                text: "9) Edge's Play From a time function starting at 1 sec",
+                text: "9) Edge's playFrom(time) starting at 1 sec",
+                font: ['Arial, Helvetica, sans-serif', 14, "rgba(0,0,0,1)", "normal", "none", "italic"]
+            },
+            {
+                id: 'sym-play-from-1Copy',
+                type: 'rect',
+                rect: ['34px', '461px','auto','auto','auto', 'auto'],
+                transform: [[],[],[],['1','0.7']]
+            },
+            {
+                id: 'text-symbol-partialCopy10',
+                type: 'text',
+                rect: ['43px', '445px','auto','auto','auto', 'auto'],
+                opacity: 1,
+                text: "10) Edge's playFrom(time) starting at 1 sec, stopped prematurely",
                 font: ['Arial, Helvetica, sans-serif', 14, "rgba(0,0,0,1)", "normal", "none", "italic"]
             },
             {
                 id: 'sym-play-from-label',
                 type: 'rect',
-                rect: ['34px', '459px','auto','auto','auto', 'auto'],
+                rect: ['34px', '502px','auto','auto','auto', 'auto'],
                 transform: [[],[],[],['1','0.7']]
             },
             {
                 id: 'text-symbol-partialCopy9',
                 type: 'text',
-                rect: ['43px', '443px','auto','auto','auto', 'auto'],
+                rect: ['43px', '486px','auto','auto','auto', 'auto'],
                 opacity: 1,
-                text: "10) Edge's Play From a label function starting at 1 sec",
+                text: "11) Edge's playFrom(label) starting at 1 sec",
                 font: ['Arial, Helvetica, sans-serif', 14, "rgba(0,0,0,1)", "normal", "none", "italic"]
             },
             {
                 id: 'text-symbol-partialCopy6',
                 type: 'text',
-                rect: ['43px', '483px','auto','auto','auto', 'auto'],
+                rect: ['43px', '526px','auto','auto','auto', 'auto'],
                 opacity: 1,
-                text: "8) Symbol Looping (Support for Stop, but not restart)",
+                text: "12) Symbol Looping",
                 font: ['Arial, Helvetica, sans-serif', 14, "rgba(0,0,0,1)", "normal", "none", "italic"]
             },
             {
@@ -260,6 +281,10 @@ var symbols = {
                 autoPlay: {
 
                 }
+            },
+            {
+                id: 'sym-play-from-1Copy',
+                symbolName: 'sym-full-manual'
             },
             {
                 id: 'sym-partial-twice',
@@ -349,7 +374,7 @@ var symbols = {
                 ["transform", "scaleY", '0.7']
             ],
             "${_text-symbol-partialCopy6}": [
-                ["style", "top", '483px'],
+                ["style", "top", '526px'],
                 ["style", "opacity", '1'],
                 ["style", "font-style", 'italic'],
                 ["style", "font-family", 'Arial, Helvetica, sans-serif'],
@@ -358,7 +383,7 @@ var symbols = {
             ],
             "${_stage-playhead}": [
                 ["style", "top", '45px'],
-                ["style", "height", '484px'],
+                ["style", "height", '522px'],
                 ["color", "border-color", 'rgba(225,2,2,1.00)'],
                 ["style", "left", '34px'],
                 ["style", "border-width", '1px']
@@ -431,11 +456,11 @@ var symbols = {
                 ["style", "font-size", '14px']
             ],
             "${_sym-play-from-label}": [
-                ["style", "top", '459px'],
+                ["style", "top", '502px'],
                 ["transform", "scaleY", '0.7']
             ],
             "${_text-symbol-partialCopy9}": [
-                ["style", "top", '443px'],
+                ["style", "top", '486px'],
                 ["style", "opacity", '1'],
                 ["style", "font-style", 'italic'],
                 ["style", "font-family", 'Arial, Helvetica, sans-serif'],
@@ -450,11 +475,29 @@ var symbols = {
                 ["style", "left", '43px'],
                 ["style", "font-size", '14px']
             ],
+            "${_text-symbol-partialCopy10}": [
+                ["style", "top", '445px'],
+                ["style", "opacity", '1'],
+                ["style", "font-style", 'italic'],
+                ["style", "font-family", 'Arial, Helvetica, sans-serif'],
+                ["style", "left", '43px'],
+                ["style", "font-size", '14px']
+            ],
+            "${_sym-play-from-1Copy}": [
+                ["style", "top", '461px'],
+                ["transform", "scaleY", '0.7']
+            ],
             "${_RectangleCopy}": [
                 ["style", "height", '20px'],
                 ["color", "border-color", 'rgb(78, 81, 84)'],
                 ["style", "top", '376px'],
                 ["style", "border-style", 'solid']
+            ],
+            "${_RectangleCopy2}": [
+                ["style", "height", '20px'],
+                ["color", "border-color", 'rgb(78, 81, 84)'],
+                ["style", "border-style", 'solid'],
+                ["style", "top", '460px']
             ],
             "${_Rectangle}": [
                 ["style", "height", '20px'],
@@ -476,7 +519,7 @@ var symbols = {
                 ["style", "font-size", '14px']
             ],
             "${_sym-looping}": [
-                ["style", "top", '500px'],
+                ["style", "top", '543px'],
                 ["style", "opacity", '1'],
                 ["transform", "scaleY", '0.7']
             ],
@@ -515,7 +558,7 @@ var symbols = {
             "${_Stage}": [
                 ["color", "background-color", 'rgba(89,107,124,1.00)'],
                 ["style", "width", '638px'],
-                ["style", "height", '548px'],
+                ["style", "height", '579px'],
                 ["style", "overflow", 'hidden']
             ],
             "${_sym-reverse-partial}": [
@@ -531,7 +574,7 @@ var symbols = {
             "${_Background}": [
                 ["color", "background-color", 'rgba(201,199,196,1.00)'],
                 ["color", "border-color", 'rgba(41,41,41,1.00)'],
-                ["style", "height", '539px'],
+                ["style", "height", '572px'],
                 ["style", "border-style", 'solid'],
                 ["style", "border-width", '7px'],
                 ["style", "width", '624px']
@@ -548,7 +591,7 @@ var symbols = {
                 { id: "eid95", tween: [ "style", "${_sym-child}", "top", '253px', { fromValue: '253px'}], position: 0, duration: 0 },
                 { id: "eid92", tween: [ "style", "${_sym-partial}", "top", '132px', { fromValue: '132px'}], position: 1000, duration: 0 },
                 { id: "eid99", tween: [ "style", "${_sym-full-manual}", "top", '92px', { fromValue: '92px'}], position: 0, duration: 0 },
-                { id: "eid102", tween: [ "style", "${_sym-looping}", "top", '500px', { fromValue: '500px'}], position: 0, duration: 0 },
+                { id: "eid102", tween: [ "style", "${_sym-looping}", "top", '543px', { fromValue: '543px'}], position: 0, duration: 0 },
                 { id: "eid50", tween: [ "style", "${_sym-partial-twice}", "left", '376px', { fromValue: '91px'}], position: 4250, duration: 590 },
                 { id: "eid31", tween: [ "style", "${_stage-playhead}", "left", '604px', { fromValue: '34px'}], position: 0, duration: 10000 },
                 { id: "eid94", tween: [ "style", "${_sym-partial-twice}", "top", '212px', { fromValue: '212px'}], position: 0, duration: 0 },
@@ -556,16 +599,18 @@ var symbols = {
                 { id: "eid41", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-full-manual}', [] ], ""], position: 0 },
                 { id: "eid131", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['playReverse', '${_sym-reverse}', [] ], ""], position: 0 },
                 { id: "eid118", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-full-manual-stopped}', [] ], ""], position: 0 },
-                { id: "eid145", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['playReverse', '${_sym-reverse-partial-stopped}', [] ], ""], position: 1000 },
-                { id: "eid147", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-play-from-1}', [1000] ], ""], position: 1000 },
-                { id: "eid45", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-partial-twice}', [] ], ""], position: 1000 },
                 { id: "eid150", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-play-from-label}', ['oneSec'] ], ""], position: 1000 },
-                { id: "eid144", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['playReverse', '${_sym-reverse-partial}', [] ], ""], position: 1000 },
-                { id: "eid83", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-child}', [] ], ""], position: 1000 },
+                { id: "eid151", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-play-from-1Copy}', [1000] ], ""], position: 1000 },
+                { id: "eid145", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['playReverse', '${_sym-reverse-partial-stopped}', [] ], ""], position: 1000 },
+                { id: "eid45", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-partial-twice}', [] ], ""], position: 1000 },
                 { id: "eid100", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-partial}', [] ], ""], position: 1000 },
+                { id: "eid83", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-child}', [] ], ""], position: 1000 },
+                { id: "eid144", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['playReverse', '${_sym-reverse-partial}', [] ], ""], position: 1000 },
+                { id: "eid147", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-play-from-1}', [1000] ], ""], position: 1000 },
                 { id: "eid47", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym-partial-twice}', [] ], ""], position: 6000 },
-                { id: "eid146", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['stop', '${_sym-reverse-partial-stopped}', [] ], ""], position: 7000 },
+                { id: "eid152", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['stop', '${_sym-play-from-1Copy}', [] ], ""], position: 7000 },
                 { id: "eid119", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['stop', '${_sym-full-manual-stopped}', [] ], ""], position: 7000 },
+                { id: "eid146", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['stop', '${_sym-reverse-partial-stopped}', [] ], ""], position: 7000 },
                 { id: "eid42", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['stop', '${_sym-full-manual}', [] ], ""], position: 10000 }            ]
         }
     }
@@ -675,17 +720,17 @@ var symbols = {
     content: {
             dom: [
                 {
-                    type: 'rect',
+                    rect: ['1px', '0px', '570px', '20px', 'auto', 'auto'],
                     id: 'symbol-bkgCopy2',
                     stroke: [1, 'rgb(225, 2, 2)', 'none'],
-                    rect: ['1px', '0px', '570px', '20px', 'auto', 'auto'],
+                    type: 'rect',
                     fill: ['rgba(172,172,172,1.00)']
                 },
                 {
-                    type: 'rect',
+                    rect: ['0px', '0px', '0px', '18px', 'auto', 'auto'],
                     id: 'symbol-playheadCopy2',
                     stroke: [1, 'rgba(1,108,225,1.00)', 'solid'],
-                    rect: ['0px', '0px', '0px', '18px', 'auto', 'auto'],
+                    type: 'rect',
                     fill: ['rgba(185,182,173,1)']
                 }
             ],
@@ -701,16 +746,16 @@ var symbols = {
                 ["style", "left", '1px'],
                 ["style", "width", '570px']
             ],
-            "${symbolSelector}": [
-                ["style", "height", '20px'],
-                ["style", "width", '571px']
-            ],
             "${_symbol-playheadCopy2}": [
                 ["style", "top", '0px'],
                 ["style", "height", '18px'],
                 ["color", "border-color", 'rgba(1,108,225,1.00)'],
                 ["style", "left", '0px'],
                 ["style", "border-width", '1px']
+            ],
+            "${symbolSelector}": [
+                ["style", "height", '20px'],
+                ["style", "width", '571px']
             ]
         }
     },
@@ -1137,17 +1182,17 @@ var symbols = {
     content: {
             dom: [
                 {
-                    type: 'rect',
+                    rect: ['0px', '0px', '458px', '20px', 'auto', 'auto'],
                     id: 'symbol-bkgCopy',
                     stroke: [1, 'rgb(225, 2, 2)', 'none'],
-                    rect: ['0px', '0px', '458px', '20px', 'auto', 'auto'],
+                    type: 'rect',
                     fill: ['rgba(172,172,172,1.00)']
                 },
                 {
-                    type: 'rect',
+                    rect: ['0px', '0px', '0px', '18px', 'auto', 'auto'],
                     id: 'symbol-playheadCopy',
                     stroke: [1, 'rgba(1,108,225,1.00)', 'solid'],
-                    rect: ['0px', '0px', '0px', '18px', 'auto', 'auto'],
+                    type: 'rect',
                     fill: ['rgba(185,182,173,1)']
                 }
             ],

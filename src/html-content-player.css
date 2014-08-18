@@ -270,8 +270,8 @@ audio {
 }
 
 .player-time-slider .player-track{
-  border: solid 1px rgba(0, 0, 0, 0.5);
-  border-bottom: solid 1px rgba(255, 255, 255, 0.4);
+  /*border: solid 1px rgba(0, 0, 0, 0.5);*/
+  /*border-bottom: solid 1px rgba(255, 255, 255, 0.4);*/
   position: absolute;
   top: 14px;
   bottom: 16px;
@@ -289,7 +289,7 @@ audio {
   background: -o-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%);
   background: -ms-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%); 
   background: linear-gradient(to bottom,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%); 
-  */
+  
 
   background: #4e4e4e; /* Old browsers */
   background: -moz-linear-gradient(top, #4e4e4e 0%, #6f6f6f 13%, #b3b3b3 78%, #c6c6c6 100%); /* FF3.6+ */

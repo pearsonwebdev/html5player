@@ -355,6 +355,15 @@
     // --- gotoTimeAsPercentage() ----------------
     function gotoTimeAsPercentage(percentage) {
 
+      // Determine if the playing has reached the end
+      _playEnded = false;
+
+      if (percentage > 0.99) {
+        _audioTrack.pause();
+        _subtitles.html('');
+        playEnded();
+      }
+
       if (percentage <= 0 ) {
         _subtitles.html('');
         percentage = 0.001;
@@ -363,7 +372,7 @@
       // Update progress bar position
       _progressBar.width(percentage * 100 + '%');
 
-      // Change the audio track's current time.  Safari needs a
+      // Change the audio track's current time. Safari needs a
       // kludge to correctly report the audio's currentTime
       if (_useAudioKludge && _audioTrack.duration && !isNaN(_audioTrack.duration))
         _audioTrack.currentTime = _audioTrack.duration * percentage;
@@ -384,7 +393,6 @@
       if (_useAudioKludge && _audioTrack.duration && !isNaN(_audioTrack.duration))
         _timelineDifference = _audioTrack.currentTime * 1000 - _stage.getPosition();
 
-      _playEnded = false;
     }
 
     function play() {
@@ -430,21 +438,6 @@
 
 
     function playAll(newTime, symbol, isReverse) {
-      //  Support for:
-      //    + Play
-      //    - playFrom time
-      //    - playFrom label
-      //    + playReverse
-      //    - playReverse, stopped prematurely
-      //    + play triggers from correct time after seek
-      //    + multiple trigger scenarios on the same symbol?
-      //    + looping symbols (action within to go to a position) - we stop these, but can't play
-      //    + prematurely stopped symbol (with trigger)
-      //    + grandchildren
-      //    - auto play?
-      //    - stop at time
-      //    - stop at label
-
       symbol = symbol || _stage;
       newTime = newTime || symbol.getPosition();
 
@@ -509,21 +502,40 @@
 
     }
 
+    //  getPlayableSymbols(newTime, symbol)
+    //
+    //  Supports the playAll and stopAll functions and allows the user to
+    //  manipulate the timeline and have child symbols respond correctly.
+    //  We are looping through a symbol's triggers, determining which child symbols
+    //  need to be playing, and calculate the time that they should play from.
+    //
+    //  Support for:
+    //    + Play
+    //    + playFrom time
+    //    + playFrom label
+    //    + playReverse
+    //    + playReverse, stopped prematurely
+    //    + multiple trigger scenarios on the same symbol?
+    //    + looping symbols (action within to go to a position) - we stop these, but can't play
+    //    + prematurely stopped symbol (with trigger)
+    //    + grandchildren
+    //    - stop at time
+    //    - stop at label
+    //
     function getPlayableSymbols(newTime, symbol) {
-      // By looping through the triggers, determine what child symbols need to be playing and
-      // calculate the time that they should play from.
+      
       var playableSymbols = [];
 
-      // temporary collection of symbols that were triggered in reverse
+      // for any reverse-playing symbols, temporarily store their trigger positions
       var revSymbolPositions = [];
 
       // get all of the timelines for this symbol, sort them by "position", aka time.
       var timelines = symbol.timelines['Default Timeline'].timeline.sort();
 
-      // Go through the timeline and focus on triggers (as opposed to tweens)
+      // Loop through timelines and act on triggers
       for (var i = 0, length = timelines.length; i < length; i++) {
         var timeline = timelines[i];
-        if (!timeline.trigger) continue;
+        if (!timeline.trigger) continue; // skip tweens
 
         // Get the trigger data, this is somewhat brittle but Edge does not give us helpers to retrieve this info.
         var triggerData = timeline.trigger[1];
@@ -535,12 +547,14 @@
         var selector = triggerData[1];
         var triggerSymbol = symbol.getSymbol(selector);
 
+        // Is it playing in reverse?
         var isReverse = (triggerAction === 'playReverse');
 
         if (isReverse) {
           revSymbolPositions[selector] = timeline.position;
         }
 
+        // PLAY & PLAY REVERSE ACTIONS ---------
         if (triggerAction === 'play' || triggerAction === 'playReverse') {
 
           var playFromTime = 0;
@@ -584,6 +598,7 @@
           }
         }
 
+        // STOP ACTION --------------------
         if (triggerAction === 'stop') {
 
           if (newTime > timeline.position) {
@@ -814,7 +829,6 @@
     }
 
     function nextButtonClicked(event) {
-      // console.log("next button clicked");
       $('.player-poster').hide();
       gotoTimeAsPercentage(1);
       playEnded();
