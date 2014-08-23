@@ -52,52 +52,9 @@
           AdobeEdge.bootstrapCallback(function (compId) {
             stage = AdobeEdge.getComposition(compId).getStage();
             $('#player-base').htmlcontentplayer({duration: 10, 
-                                                 playableElement: stage,
-                                                 triggerOnSync: false//,  // Stop player from firing played/paused events during audio sync
-                                                 //played: playerPlayed,
-                                                 //paused: playerPaused
+                                                 playableElement: stage
                                              });
           });
-
-          // Handle Player Events ---
-
-          function playerPlayed(e, time) {
-            // Get all symbols, if they are visible, play them.
-            var childSymbols = stage.getChildSymbols();
-            var stageTime = stage.getPosition();
-
-            for(var i=0; i<childSymbols.length; i++) {
-                var symbol = childSymbols[i];
-
-                if (symbol.getSymbolElement().is(':visible')) {
-                    if (time) {
-                        var symbolTime = symbol.getPosition();
-                        var symbolTimeDiff = stageTime - symbolTime;
-                        var newSymbolTime = time - symbolTimeDiff;
-
-                        symbol.play(newSymbolTime);
-                    }
-                    else {
-                        symbol.play();                        
-                    }
-                }
-            }
-          }
-
-          function playerPaused(e, time) {
-            // Get all symbols and stop them (no need to check visibility here)
-            var childSymbols = stage.getChildSymbols();
-
-            for(var i=0; i<childSymbols.length; i++) {
-                var symbol = childSymbols[i];
-                if (time) {
-                    symbol.stop(time);                        
-                }
-                else {
-                    symbol.stop();                        
-                }
-            }
-          }
 
         })(jQuery);
     </script>

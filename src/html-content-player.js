@@ -26,7 +26,8 @@
       hideVolButton: false,
       hideCCButton: false,
       hideFullScreenButton: false,
-      fullScreen: false
+      fullScreen: false,
+      isAdobeEdge: true
     },
 
     _create: function() {
@@ -313,12 +314,12 @@
       if (_keyframeElapsed > 40) {
 
         if (_isPlaying) {
-          playAll(currentTime * 1000);
+          playFromTime(currentTime * 1000);
           if (_options.triggerOnSync)
             widget._trigger('played', null, currentTime * 1000);
         }
         else {
-          stopAll(currentTime * 1000);
+          stopAtTime(currentTime * 1000);
           if (_options.triggerOnSync)
             widget._trigger('paused', null, currentTime * 1000);
         }
@@ -381,11 +382,11 @@
 
       // Change the stage's current time
       if (_isPlaying) {
-        playAll(_options.duration * percentage * 1000);
+        playFromTime(_options.duration * percentage * 1000);
         widget._trigger('played', null, _options.duration * percentage * 1000);
       }
       else {
-        stopAll(_options.duration * percentage * 1000);
+        stopAtTime(_options.duration * percentage * 1000);
         widget._trigger('paused', null, _options.duration * percentage * 1000);
       }
 
@@ -403,13 +404,14 @@
 
       $('.player-poster').hide();
       _isPlaying = true;
-      playAll();
+      playFromTime();
       _audioTrack.play();
       widget._trigger('played', null, null);
       _playButton.addClass('paused');
       _playButton.html('Pause');
     }
 
+    // Public function exposed in the API
     function playFrom(time) {
       _isPlaying = true;
       gotoTimeAsPercentage((time/1000)/_options.duration);
@@ -418,7 +420,7 @@
     function stop() {
       _isPlaying = false;
       _audioTrack.pause();
-      stopAll();
+      stopAtTime();
       widget._trigger('paused', null, null);
       _playButton.removeClass('paused');
       _playButton.html('Play');
@@ -429,14 +431,34 @@
     }
 
     function playEnded() {
-      stopAll();
+      stopAtTime();
       widget._trigger('paused', null, null);
       _playButton.removeClass('paused');
       _isPlaying = false;
       _playEnded = true;
     }
 
+    // private function used internally
+    function playFromTime(newTime) {
+      if (_options.isAdobeEdge) {
+        playAll(newTime);
+      }
+      else {
+        _stage.play(newTime);
+      }
+    }
 
+    // private function used internally
+    function stopAtTime(newTime) {
+      if (_options.isAdobeEdge) {
+        stopAll(newTime);
+      }
+      else {
+        _stage.stop(newTime);
+      }
+    }
+
+    // Adobe Edge specific play with support for symbol use cases
     function playAll(newTime, symbol, isReverse) {
       symbol = symbol || _stage;
       newTime = newTime || symbol.getPosition();
@@ -452,10 +474,10 @@
       var playableSymbols = getPlayableSymbols(newTime, symbol);
 
       // loop through the array of playableSymbols and play them
-      for (var k = 0, len = playableSymbols.length; k < len; k++) {
-        var childSymbol = playableSymbols[k].symbol;
-        var triggerPosition = playableSymbols[k].position;
-        var childIsReverse = playableSymbols[k].isReverse;
+      for (var i in playableSymbols) {
+        var childSymbol = playableSymbols[i].symbol;
+        var triggerPosition = playableSymbols[i].position;
+        var childIsReverse = playableSymbols[i].isReverse;
 
         // figure out what time the child needs to play from
         var childNewTime = newTime - triggerPosition;
@@ -470,6 +492,8 @@
       }
     }
 
+    // Adobe Edge specific stop with support for symbol use cases
+    // stopAll is also used when seeking.
     function stopAll(newTime, symbol) {
       symbol = symbol || _stage;
       newTime = newTime || symbol.getPosition();
@@ -480,10 +504,11 @@
       var playableSymbols = getPlayableSymbols(newTime, symbol);
 
       // loop through the array of playableSymbols and stop them
-      for (var k = 0, len = playableSymbols.length; k < len; k++) {
-        var childSymbol = playableSymbols[k].symbol;
-        var triggerPosition = playableSymbols[k].position;
-        var isReverse = playableSymbols[k].isReverse;
+      for (var i in playableSymbols) {
+
+        var childSymbol = playableSymbols[i].symbol;
+        var triggerPosition = playableSymbols[i].position;
+        var isReverse = playableSymbols[i].isReverse;
 
         // figure out what time the child needs to play from
         var childNewTime = newTime - triggerPosition;
@@ -509,6 +534,8 @@
     //  We are looping through a symbol's triggers, determining which child symbols
     //  need to be playing, and calculate the time that they should play from.
     //
+    //  In some scenarios, such as if the new time is after a stop trigger
+    //
     //  Support for:
     //    + Play
     //    + playFrom time
@@ -519,15 +546,18 @@
     //    + looping symbols (action within to go to a position) - we stop these, but can't play
     //    + prematurely stopped symbol (with trigger)
     //    + grandchildren
-    //    - stop at time
-    //    - stop at label
+    //    + stop at time
+    //    + stop at label
     //
     function getPlayableSymbols(newTime, symbol) {
       
-      var playableSymbols = [];
+      var playableSymbols = {};
 
       // for any reverse-playing symbols, temporarily store their trigger positions
-      var revSymbolPositions = [];
+      var revSymbolPositions = {};
+
+      // Store all positions during play triggers, so that stop triggers can stop at the correct time.
+      var triggerPositions = {};
 
       // get all of the timelines for this symbol, sort them by "position", aka time.
       var timelines = symbol.timelines['Default Timeline'].timeline.sort();
@@ -543,7 +573,7 @@
         // Get the action (play, stop) from the trigger. How we are doing this is brittle. Unfortunately Edge does not give us any helpers here.
         var triggerAction = triggerData[0];
 
-        // Get the selector name from the trigger (strip off extra junk)
+        // Get the selector name and then the symbol itself
         var selector = triggerData[1];
         var triggerSymbol = symbol.getSymbol(selector);
 
@@ -557,34 +587,20 @@
         // PLAY & PLAY REVERSE ACTIONS ---------
         if (triggerAction === 'play' || triggerAction === 'playReverse') {
 
-          var playFromTime = 0;
-
-          // index 2 is the playFrom time or label
-          if (triggerData[2].length > 0) {
-
-            // The actual value is also an array, we'll use index 0. I've never been able to produce a usecase where it contains more than a single value.
-            if (typeof triggerData[2][0] === 'string') {
-              // look up the label
-              var labels = triggerSymbol.getTimelineData('Default Timeline').labels;
-              if (labels) {
-                playFromTime = labels[triggerData[2][0]];
-              }
-            }
-            else {
-              playFromTime = triggerData[2][0];
-            }
-
-          }
+          // index 2 is the playFrom time or label, in most cases this is 0
+          var playFromTime = getPlayFromOrStopAtTime(triggerSymbol, triggerData[2]);
 
           var timelineStart = timeline.position - playFromTime;
           var timelineEnd = timelineStart + triggerSymbol.getDuration();
 
+          triggerPositions[selector] = timelineStart;
+
           // if the newTime falls within the symbol, add the symbol to the array of symbols to play.
           if (newTime > timeline.position && newTime < timelineEnd) {
 
-            playableSymbols.push({ symbol: triggerSymbol,
-                                   position: timelineStart,
-                                   isReverse: isReverse });
+            playableSymbols[selector] = { symbol: triggerSymbol,
+                                          position: timelineStart,
+                                          isReverse: isReverse };
           }
           // if the newTime is before the symbol, set the symbol time to 0
           else if (newTime <= timeline.position) {
@@ -593,7 +609,7 @@
           }
           // if the newTime is after the symbol, set the symbol time to the duration
           else if (newTime >= timelineEnd) {
-            var afterTime = (isReverse) ? 0 : triggerSymbol.getDuration(); 
+            var afterTime = (isReverse) ? 0 : triggerSymbol.getDuration();
             triggerSymbol.seek(afterTime);
           }
         }
@@ -602,25 +618,48 @@
         if (triggerAction === 'stop') {
 
           if (newTime > timeline.position) {
+
+            var playTime = triggerPositions[selector] || 0;
+
+            // Remove the symbol from the playableSymbol's array (if its there)
+            delete playableSymbols[selector];
+
+            // index 2 is the stopAt time or label, in most cases this doesn't exist, therefore its 0
+            var stopAtTime = getPlayFromOrStopAtTime(triggerSymbol, triggerData[2]);
+
+            // position to stop at
+            var symbolPosition = (stopAtTime > 0) ? stopAtTime : timeline.position - playTime;
             
-            // Get the position to stop at, take into account if the symbol is playing in reverse
-            var symbolPosition = (revSymbolPositions[selector]) ? triggerSymbol.getDuration() - timeline.position + revSymbolPositions[selector] : timeline.position;
+            // If symbol is playing in reverse figure out the stop time.
+            if (revSymbolPositions[selector]) {
+              symbolPosition = triggerSymbol.getDuration() - timeline.position + revSymbolPositions[selector];
+            }
 
             // Make symbol's time match the stop trigger time
             triggerSymbol.seek(symbolPosition);
-
-            // Remove the symbol from the playableSymbol's array (if its there)
-            for (var k=0; k < playableSymbols.length; k++) {
-              if (playableSymbols[k].symbol === triggerSymbol) {
-                playableSymbols.splice(k,1);
-              }
-            }
           }
         }
 
       }
-
       return playableSymbols;
+    }
+
+    // Edge's playFrom and stopAt triggers take a time or a label, 
+    // return that time and lookup the time if its a label
+    function getPlayFromOrStopAtTime(triggerSymbol, data) {
+
+      if (data.length > 0) {
+        // The actual value is also an array, we'll use index 0. I've never been able to produce a usecase where it contains more than a single value.
+        if (typeof data[0] === 'string') {
+          // look up the label
+          var labels = triggerSymbol.getTimelineData('Default Timeline').labels;
+          if (labels) {
+            return labels[data[0]];
+          }
+        }
+        return data[0];
+      }
+      return 0;
     }
 
     function adjustVolume(volume){
