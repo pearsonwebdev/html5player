@@ -6,7 +6,6 @@
 	<title>Untitled</title>
 
     <script src="./edge_includes/jquery-2.0.3.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     
     <!-- HTML5 Player Styles and Code ............ -->
     <link href="../../release/html-content-player.min.css" rel="stylesheet" type="text/css" />
@@ -35,13 +34,7 @@
 </head>
 <body style="margin:0;padding:0;">
 
-    <div id="player-base">
-        <audio id="narration" audio preload="auto" autobuffer>
-          <source src="Narration.ogg" type="audio/ogg"/>
-          <source src="Narration.mp3" type="audio/mpeg"/>
-        </audio>
-        <div id="Stage" class="EDGE-126256608"></div>
-    </div>
+    <div id="Stage" class="EDGE-126256608"></div>
 
 
     <script>
@@ -51,9 +44,43 @@
 
           AdobeEdge.bootstrapCallback(function (compId) {
             stage = AdobeEdge.getComposition(compId).getStage();
-            $('#player-base').htmlcontentplayer({duration: 10, 
-                                                 playableElement: stage
-                                             });
+            var player = new HtmlContentPlayer({duration: 10, 
+                                                playableElement: stage,  // Change playableElement to animation
+                                                audio: ['Narration.ogg', 'Narration.mp3']});
+            
+            // Test player's event handing ------
+            // player.on('played', function(event) {
+            //     console.log('player played');
+            // });
+            // player.on('paused', function(event) {
+            //     console.log('player paused');
+            // });
+            // player.on('playerDOMReady', function(event) {
+            //     console.log('player ready');
+            // });
+            // player.on('maximizeComplete', function(event) {
+            //     console.log('maximizeComplete');
+            // });
+            // player.on('restoreComplete', function(event) {
+            //     console.log('restoreComplete');
+            // });
+            // player.on('windowResized', function(event) {
+            //     console.log('windowResized');
+            // });
+
+            // Test player's public functions -----
+            // window.setTimeout(function(){
+            //     player.play();
+            // }, 1000);
+
+            // window.setTimeout(function(){
+            //     player.play(5000);
+            // }, 3000);
+
+            // window.setTimeout(function(){
+            //     player.stop();
+            // }, 5000);
+
           });
 
         })(jQuery);
