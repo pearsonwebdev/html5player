@@ -11,7 +11,7 @@
 // We have a major kludge in here for making Safari (desktop and iOS) behave with repect to
 // changing time on the timeslider.  The issue is that when we manually set the currentTime
 // of the audio object, such as when the user click on the time slider, Safari would jump to
-// the wrong point in the audio file.  We were not able to get to the heart of the problem,
+// the wrong point in the audio file.  We were not able to get to the root of the problem,
 // but found a workaround.  Safari reports the duration of the audio track as longer than
 // it really is.  The difference between the real duration and the Safari duration has a
 // direct correlation with the amount of offset that we were seeing when changing time on
@@ -39,6 +39,8 @@
         var defaults = {
             playableElement: null, // animation's stage (required)
             duration: null,        // in seconds (required)
+            audio: null,
+            elem: null,
             srt: null,             // url
             poster: null,          // url
             autoPlay: false,       // Only use during animation authoring
@@ -82,7 +84,7 @@
 
         // Useful member variables
         var _stage = _options.playableElement;
-        var _stageElem = _stage.getSymbolElement() || $(options.elem) || $('#Stage');
+        var _stageElem = _stage.getSymbolElement() || $(_options.elem) || $('#Stage');
         var _isPlaying = false;
         var _isMuted = false;
         var _isFullscreen = false;
@@ -94,17 +96,26 @@
         var _isVolThumbDown = false;
         var _showSubtitles = false;
         var _volShowing = false;
-        var _totalButtonWidth = 0;
         var _lastVolume = 0.75;
         var _safariTimeSliderDiff = 0;
-        var _playerScale = 1.0;
+        var _baseContentHeight;
+        var _baseContentWidth;
+        var _parseSRT;
 
+        // Load SRT file, if available
+        if (_options.srt) {
+            _parseSRT = new window.Subtitles(_options.srt);
+        }
+
+        // Load and append the player template structure
         appendTemplate();
 
 
         function appendTemplate() {
             // Load the html template and build the player DOM
             $.get(_jsPath + 'html-content-player-structure.html', function(template) {
+
+                _stageElem.wrap('<div class="temp-wrapper"></div>');
                 _stageElem.parent().append(template);
 
                 // Check if Stage has "Responsive Scaling" set
@@ -148,8 +159,6 @@
             _volThumb.on('keydown', volThumbKeyDown);
             _volThumb.on('mousedown', volThumbMouseDown);
             _volThumb.on('touchstart', volThumbMouseDown);
-            $(_audioTrack).on('timeupdate', timeUpdated);
-            $(_audioTrack).on('ended', playEnded);
             $('.player-fullscreen-button').on('click', fullscreenButtonClicked);
             $('.player-time-slider .player-track').on('mousedown', timeTrackMouseDown);
             $('.player-time-slider .player-thumb').on('keydown', timeThumbKeyDown);
@@ -187,17 +196,47 @@
 
             // Reparent the animation div
             _playerContent.append(_stageElem);
+            $('#player-base').unwrap();
 
-            // Initiate Audio
+            _baseContentHeight = _playerContent.height() ;
+            _baseContentWidth = _playerContent.width();
+
+            // If audio is present, initialize it and perform other audio-related setup
             if (_options.audio) {
+
+                // Initialize Audio
                 createAudio();
                 adjustVolume(0.75);
-            }
+                
+                // Wire audio events
+                $(_audioTrack).on('timeupdate', timeUpdated);
+                $(_audioTrack).on('ended', playEnded);
 
-            // detect Safari on Windows
-            if (navigator.vendor && navigator.vendor.match(/Apple/i) && navigator.userAgent.match(/Windows/i)){
-                _safariTimeSliderDiff = 42;
+                // detect Safari on Windows
+                if (navigator.vendor && navigator.vendor.match(/Apple/i) && navigator.userAgent.match(/Windows/i)){
+                    _safariTimeSliderDiff = 42;
+                }
+
+                // Start our Safari audioFix kludge
+                if (navigator.vendor && navigator.vendor.match(/Apple/i)) {
+                    playAudio();
+                    pauseAudio();
+                    _useAudioKludge = true;
+                }
+
+                // use kludge on Windows Vista IE9 
+                if (navigator.userAgent.match(/Windows NT 6.0/i) && navigator.userAgent.match(/MSIE 9.0/i)){
+                    _useAudioKludge = true;
+                }
             }
+            else if (_options.isAdobeEdge && window.AdobeEdge) {
+                // Since there is no audio in this condition, listen to stage events
+                window.AdobeEdge.Symbol.bindTimelineAction(_stage.getComposition().compId, 'stage', 'Default Timeline', 'update', timeUpdated);
+                window.AdobeEdge.Symbol.bindTimelineAction(_stage.getComposition().compId, 'stage', 'Default Timeline', 'complete', playEnded);
+                $('.player-vol-button').remove();
+            }
+            // TODO: other condition for non-edge anims, need to listen to their update function
+
 
             // detect iOS
             if(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)) {
@@ -211,33 +250,25 @@
                 $('.player-vol-button').remove();
             }
 
-            // Start our Safari audioFix kludge
-            if (navigator.vendor && navigator.vendor.match(/Apple/i)) {
-                _audioTrack.play();
-                _audioTrack.pause();
-                _useAudioKludge = true;
-            }
-
-            // use kludge on Windows Vista IE9 
-            if (navigator.userAgent.match(/Windows NT 6.0/i) && navigator.userAgent.match(/MSIE 9.0/i)){
-                _useAudioKludge = true;
-            }
-
             // Init slider accessibility
             _timeThumb.attr('aria-valuemin', 0);
             _timeThumb.attr('aria-valuemax', _options.duration);
             _volThumb.attr('aria-valuenow', 75);
 
-            // Javascript-based flexible timeslider width (for Accessibility & IE9 doesn't support flexible box model)
-            setTimeSliderWidth();
+            // If the player is started on a mobile device, scale things down
+            if (!_options.fullScreen) {
+                fitIntoWindow();
+            }
 
             // Set inital states using arguments ----
 
-            if (_options.autoPlay)
+            if (_options.autoPlay) {
                 playButtonClicked();
+            }
 
-            if (_options.mute)
+            if (_options.mute) {
                 muteButtonClicked();
+            }
 
             if(!_options.showControls) {
                 $('.player-controls').hide();
@@ -252,8 +283,6 @@
             if (_options.showTime)
                 _currentTime.show();
 
-            $('.animation').show();
-
             if (_options.startTime)
                 playFrom(_options.startTime);
 
@@ -266,48 +295,52 @@
             $('#player-base, .player-inner').css('background-image', 'none');
         }
 
-         // --- Core Methods ----------------------------------
+        // -- CORE FUNCTIONALITY ----------------------------------
 
         // -- Animation "ticks" -----------
         function _timeUpdated(event) {
 
-            var currentTime = (_audioTrack.currentTime * 1000 - _timelineDifference)/1000;
+            var currentTime = getCurrentTime();
 
-            // Small accomodation for IE, where it reports the incorrect duration, but doesn't need the full audio kludge.
-            if (currentTime >= _options.duration) {
-                _audioTrack.pause();
-                _subtitles.html('');
-                playEnded();
-                return;
-            }
+            // Specific tasks if audio is present
+            if (_options.audio) {
 
-            // Keep audio and video in sync.  We're essentially using a similar technique
-            // that real video uses.  Every so often the player will sync the video to the
-            // audio's current time.  Real video stores a keyframe value that says how many
-            // frames are between these syncs.  We are using a set value of 40, which works
-            // out to arround 7 secs on most browsers.
-            if (_keyframeElapsed > 40) {
-
-                if (_isPlaying) {
-                    playFromTime(currentTime * 1000);
-                    if (_options.triggerOnSync)
-                        trigger('played', null, currentTime * 1000);
-                }
-                else {
-                    stopAtTime(currentTime * 1000);
-                    if (_options.triggerOnSync)
-                        trigger('paused', null, currentTime * 1000);
+                // Small accomodation for IE, where it reports the incorrect duration, but doesn't need the full audio kludge.
+                if (currentTime >= _options.duration) {
+                    pauseAudio();
+                    _subtitles.html('');
+                    playEnded();
+                    return;
                 }
 
-                _keyframeElapsed = 0;
-            }
+                // Keep audio and video in sync.  We're essentially using a similar technique
+                // that real video uses. Every so often the player will sync the video to the
+                // audio's current time. Real video stores a keyframe value that says how many
+                // frames are between these syncs. We are using a set value of 40, which works
+                // out to arround 7 secs on most browsers.
+                if (_keyframeElapsed > 40) {
 
-            _keyframeElapsed = _keyframeElapsed + 1;
+                    if (_isPlaying) {
+                        playFromTime(currentTime * 1000);
+                        if (_options.triggerOnSync)
+                            trigger('played', null, currentTime * 1000);
+                    }
+                    else {
+                        stopAtTime(currentTime * 1000);
+                        if (_options.triggerOnSync)
+                            trigger('paused', null, currentTime * 1000);
+                    }
+
+                    _keyframeElapsed = 0;
+                }
+
+                _keyframeElapsed = _keyframeElapsed + 1;
+            }
 
             _progressBar.width(currentTime/_options.duration * 100 + '%');
 
             if (_showSubtitles){
-                _subtitles.html(getSubtitle(currentTime));
+                _subtitles.html(_parseSRT.getSubtitle(currentTime));
             }
 
             var mins = Math.floor(currentTime/60)<10?'' + Math.floor(currentTime/60):Math.floor(currentTime/60);
@@ -336,7 +369,7 @@
             _playEnded = false;
 
             if (percentage > 0.99) {
-                _audioTrack.pause();
+                pauseAudio();
                 _subtitles.html('');
                 playEnded();
             }
@@ -349,13 +382,17 @@
             // Update progress bar position
             _progressBar.width(percentage * 100 + '%');
 
-            // Change the audio track's current time. Safari needs a
-            // kludge to correctly report the audio's currentTime
-            if (_useAudioKludge && _audioTrack.duration && !isNaN(_audioTrack.duration))
-                _audioTrack.currentTime = _audioTrack.duration * percentage;
-            else
-                _audioTrack.currentTime = _options.duration * percentage;
-
+            if (_options.audio) {
+                // Change the audio track's current time. Safari needs a
+                // kludge to correctly report the audio's currentTime
+                if (_useAudioKludge && _audioTrack.duration && !isNaN(_audioTrack.duration)) {
+                    _audioTrack.currentTime = _audioTrack.duration * percentage;
+                }
+                else {
+                    _audioTrack.currentTime = _options.duration * percentage;
+                }
+            }
+            
             // Change the stage's current time
             if (_isPlaying) {
                 playFromTime(_options.duration * percentage * 1000);
@@ -366,9 +403,12 @@
                 trigger('paused', null, _options.duration * percentage * 1000);
             }
 
-            // Keep track of the necessary offset required to make Safari happy
-            if (_useAudioKludge && _audioTrack.duration && !isNaN(_audioTrack.duration))
-                _timelineDifference = _audioTrack.currentTime * 1000 - _stage.getPosition();
+            if (_options.audio) {
+                // Keep track of the necessary offset required to make Safari happy
+                if (_useAudioKludge && _audioTrack.duration && !isNaN(_audioTrack.duration)) {
+                    _timelineDifference = _audioTrack.currentTime * 1000 - _stage.getPosition();
+                }
+            }
 
         }
 
@@ -390,7 +430,7 @@
             $('.player-poster').hide();
             _isPlaying = true;
             playFromTime();
-            _audioTrack.play();
+            playAudio();
             trigger('played', null, null);
             _playButton.addClass('paused');
             _playButton.html('Pause');
@@ -404,7 +444,7 @@
 
         function stop() {
             _isPlaying = false;
-            _audioTrack.pause();
+            pauseAudio();
             stopAtTime();
             trigger('paused', null, null);
             _playButton.removeClass('paused');
@@ -415,7 +455,12 @@
             gotoTimeAsPercentage(0);
         }
 
-        function playEnded() {
+        function playEnded(symbol, event) {
+        
+            // For some reason, Edge triggers the "complete" event when its 
+            // first told to play. Lets look for that and return if so.
+            if (event && event.elapsed === 0) return;
+            
             stopAtTime();
             trigger('paused', null, null);
             _playButton.removeClass('paused');
@@ -459,10 +504,10 @@
             var playableSymbols = getPlayableSymbols(newTime, symbol);
 
             // loop through the array of playableSymbols and play them
-            for (var i in playableSymbols) {
-                var childSymbol = playableSymbols[i].symbol;
-                var triggerPosition = playableSymbols[i].position;
-                var childIsReverse = playableSymbols[i].isReverse;
+            for (var key in playableSymbols) {
+                var childSymbol = playableSymbols[key].symbol;
+                var triggerPosition = playableSymbols[key].position;
+                var childIsReverse = playableSymbols[key].isReverse;
 
                 // figure out what time the child needs to play from
                 var childNewTime = newTime - triggerPosition;
@@ -591,11 +636,13 @@
                     else if (newTime <= timeline.position) {
                         var beforeTime = (isReverse) ? triggerSymbol.getDuration() : 0;
                         triggerSymbol.seek(beforeTime);
+                        stopAllChildSymbols(triggerSymbol, 0);
                     }
                     // if the newTime is after the symbol, set the symbol time to the duration
                     else if (newTime >= timelineEnd) {
                         var afterTime = (isReverse) ? 0 : triggerSymbol.getDuration();
                         triggerSymbol.seek(afterTime);
+                        stopAllChildSymbols(triggerSymbol, triggerSymbol.getDuration());
                     }
                 }
 
@@ -647,6 +694,15 @@
             return 0;
         }
 
+        function stopAllChildSymbols(symbol, time) {
+            symbol.stop(time);
+            var childSymbols = symbol.getChildSymbols();
+            for(var i=0; i<childSymbols.length; i++) {
+                stopAllChildSymbols(childSymbols[i], time); // stop all of the children
+            }
+            return;
+        }
+
         function adjustVolume(volume){
             // fix for kindle
             if (volume === 0)
@@ -659,7 +715,7 @@
             $('.player-vol-slider .player-progress').css('top', y + 'px');
         }
 
-        /* --- Event Handlers -------------------------------- */
+        // -- Event Handlers -------------------------------- 
 
         function playButtonClicked() {
             if (_isPlaying) {
@@ -728,7 +784,7 @@
             adjustVolume(1-percentage);
         }
 
-        // Keyboard control of the time slider ----------
+        // -- Keyboard control of the time slider ----------
 
         function timeThumbKeyDown(event) {
             event.stopPropagation();
@@ -738,7 +794,8 @@
                 $('.player-poster').hide();
             }
 
-            var currentTime = (_audioTrack.currentTime * 1000 - _timelineDifference)/1000;
+            var currentTime = getCurrentTime();
+
             var newTime;
 
             switch(event.keyCode) {
@@ -824,7 +881,7 @@
             }
         }
 
-        // Keyboard control of the volume slider ----------
+        // -- Keyboard control of the volume slider ----------
 
         function volThumbKeyDown(event) {
 
@@ -849,6 +906,8 @@
                 adjustVolume(Math.max(_audioTrack.volume - 0.1, 0));
             }
         }
+
+        // -- Handle other playback controls ----------
 
         function backButtonClicked(event) {
             if (!_isPlaying)
@@ -964,13 +1023,13 @@
         function volumeButtonClicked(event) {
 
             if (_volShowing) {
-                $('.player-vol-slider').animate({bottom: '-170px'}, 400, 'easeInQuad', function() {$('.player-vol-slider').hide();});
+                $('.player-vol-slider').animate({bottom: '-170px'}, 400, 'swing', function() {$('.player-vol-slider').hide();});
                 $(document).off('mousedown', documentMouseDown);
                 $('.player-vol-button').html('Show volume controls');
             }
             else {
                 $('.player-vol-slider').show();
-                $('.player-vol-slider').animate({bottom: '40px'}, 600, 'easeOutExpo');
+                $('.player-vol-slider').animate({bottom: '40px'}, 400, 'swing');
                 $(document).on('mousedown', documentMouseDown);
                 setTimeout( function() {
                     if (_isMuted)
@@ -980,7 +1039,6 @@
                 }, 400);
                 $('.player-vol-button').html('Hide volume controls');
             }
-
             _volShowing = !_volShowing;
         }
 
@@ -993,18 +1051,16 @@
                 goFullscreen();
         }
 
-
         function goFullscreen() {
             var showFocus = (document.activeElement === $('.player-fullscreen-button')[0]);
 
-            $('.player-controls *').hide();
             _subtitles.hide();
 
             var bodyWidth = $(window).width();
             var bodyHeight = $(window).height() - $('.player-controls').height();
 
             var scale = Math.min(bodyWidth/_stageElem.width(), bodyHeight/_stageElem.height());
-            scalePlayer(scale);
+            //scaleElem($('#player-base'), scale);
 
             $('#player-base').addClass('no-shadow');
             $('.player-inner').appendTo('body');
@@ -1019,20 +1075,14 @@
                 _subtitles.show();
             }
 
-            scalePlayer(1.0);
             scaleElem(_stageElem, scale);
-            scaleElem(_subtitles, scale, 'left ' + (_subtitles.height()) + 'px');
-
-            _stageElem.css('left', (bodyWidth - _stageElem.width()*scale)/2);
-            _subtitles.css('left', (bodyWidth - _stageElem.width()*scale)/2);
-            _subtitles.css('bottom', 42-$('.player-controls').height()*scale);
+            _stageElem.css('left',(bodyWidth - _stageElem.width()*scale)/2);
 
             setTimeSliderWidth();
 
-            $('.player-controls *').show();
-
-            if(showFocus)
+            if(showFocus) {
                 $('.player-fullscreen-button').focus();
+            }
 
             _isFullscreen = true;
             trigger('maximizeComplete', null, null);
@@ -1042,7 +1092,6 @@
 
             var showFocus = (document.activeElement === $('.player-fullscreen-button')[0]);
 
-            $('.player-controls *').hide();
             _subtitles.hide();
 
             $('.player-fullscreen-button').removeClass('on');
@@ -1053,14 +1102,10 @@
             $('#player-base').css('opacity', 1);
 
             _stageElem.css('left',0);
-            _subtitles.css('left', 0);
-            _subtitles.css('bottom', 0);
 
             var scale = _stageElem.width()/_playerContent.width();
-            // scaleElem($('#player-base'), scale);
-            scalePlayer(scale);
-            scaleElem(_stageElem, 1.0);
-            scaleElem(_subtitles, 1.0);
+            //scaleElem($('#player-base'), scale);
+            scaleElem(_stageElem, scale);
 
             _subtitles.removeClass('fullscreen');
 
@@ -1068,15 +1113,16 @@
                 _subtitles.show();
 
             setTimeSliderWidth();
-            $('.player-controls *').show();
 
-            if(showFocus)
+            fitIntoWindow();
+
+            if(showFocus) {
                 $('.player-fullscreen-button').focus();
+            }
 
             _isFullscreen = false;
             trigger('restoreComplete', null, null);
         }
-
 
         function windowResized() {
             if (_isFullscreen) {
@@ -1084,15 +1130,15 @@
                 var bodyHeight = $(window).height() - $('.player-controls').height();
 
                 var scale = Math.min(bodyWidth/_stageElem.width(), bodyHeight/_stageElem.height());
-                var _subs = $('.player-subtitles');
+                //var _subs = $('.player-subtitles');
 
-                scalePlayer(1.0);
+                //scalePlayer(1.0);
                 scaleElem(_stageElem, scale);
-                scaleElem(_subs, scale, 'left ' + (_subs.height()) + 'px');
+                //scaleElem(_subs, scale, 'left ' + (_subs.height()) + 'px');
 
                 _stageElem.css('left', (bodyWidth - _stageElem.width()*scale)/2);
-                _subs.css('left', (bodyWidth - _stageElem.width()*scale)/2);
-                _subs.css('bottom', 42-$('.player-controls').height()*scale);
+                //_subs.css('left', (bodyWidth - _stageElem.width()*scale)/2);
+                //_subs.css('bottom', 42-$('.player-controls').height()*scale);
 
                 setTimeSliderWidth();
 
@@ -1106,54 +1152,58 @@
                 });
             }
             else {
-                var win = $(window);
-                var w = Math.min(win.width(), 638);
-                var h = Math.min(win.height(), 523);
-                var s = Math.min(w/638.0, h/523.0);
+                fitIntoWindow();
+            }
+        }
 
-                scalePlayer(s);
-                $('#animation-container').height(523 * s);
+        // -- Helpers --------------------------------------- 
+
+        function fitIntoWindow() {
+
+            if (_isFullscreen) {
+                return;
             }
 
+            var win = $(window);
+            // Using "+ 2" on the window's size since the player-content
+            // element has a -1px margin all around. Somewhat brittle.
+            var w = Math.min(win.width() + 2, _baseContentWidth);
+            var h = Math.min(win.height() + 2, _baseContentHeight);
+            var scale = Math.min(w/_baseContentWidth, h/_baseContentHeight);
+
+            scaleElem(_playerContent, scale);
+
+            _playerContent.height(_baseContentHeight * scale);
+            _playerContent.width(_baseContentWidth * scale);
+
+            if (scale < 1) {
+                $('.player-fullscreen-button').hide();
+            }
+            else {
+                $('.player-fullscreen-button').show();
+            }
+
+            setTimeSliderWidth();
         }
 
-        /* --- Helpers --------------------------------------- */
-        function getVolSliderPercentageFor(eventY) {
-            var playerBaseOffset = $('#player-base').offset().top;
-            var trackTop = $('.player-vol-slider .player-track').offset().top;
-            var y = eventY - trackTop;
-            var trackHeight =   $('.player-vol-slider .player-track').height();
-            var trackHeightActual = trackHeight * _playerScale;
-            // var y = (event.offsetY) ? event.offsetY : event.originalEvent.layerY;
-            var percentage = y/trackHeightActual;
-            return percentage;
+        function setTimeSliderWidth() {
+
+            var totalButtonWidth = 0;
+
+            $('.player-controls > button').filter(':visible').each(function(){
+                totalButtonWidth += $(this).outerWidth(true);
+            });
+
+            $('.player-time-slider').width($('.player-inner').innerWidth() - totalButtonWidth - _safariTimeSliderDiff);
         }
 
-
-        function getTimeTrackPercentageFor(eventX) {
-            // left side of the player
-            var playerBaseOffset = $('#player-base').offset().left;
-
-            // unscaled left side of the track
-            var trackLeft = $('.player-time-slider .player-track').offset().left;
-
-            // scaled position of the left side of the track
-            // var trackLeftActual = playerBaseOffset + (trackLeft - playerBaseOffset) * _playerScale;
-
-            // position of cursor relative to the track
-            var x = eventX - trackLeft;
-
-            // unscaled width of the track
-            var trackWidth = $('.player-time-slider .player-track').width();
-
-            // scaled width of the track
-            var trackWidthActual = trackWidth * _playerScale;
-
-            var percentage = x / trackWidthActual;
-
-            return percentage;
+        function scalePlayer(scale) {
+            scaleElem($('#player-base'), scale);
         }
 
+        function clearScalePlayer() {
+            scalePlayer(1.0);
+        }
 
         function transElem(element, transform) {
             element.css('-webkit-transform', transform);
@@ -1178,18 +1228,35 @@
             transOrigin(element, origin);
         }
 
-        function scalePlayer(scale) {
-            _playerScale = scale;
-            scaleElem($('#player-base'), scale);
-            scaleElem($('#player-subtitles'), scale, 'bottom left');
-        }
-
-        function clearScalePlayer() {
-            scalePlayer(1.0);
-        }
-
         function clearScaleElem(element) {
             transElem(element, 'none');
+        }
+
+        function getVolSliderPercentageFor(eventY) {
+            var playerBaseOffset = $('#player-base').offset().top;
+            var trackTop = $('.player-vol-slider .player-track').offset().top;
+            var y = eventY - trackTop;
+            var trackHeight =   $('.player-vol-slider .player-track').height();
+            var percentage = y/trackHeight;
+            return percentage;
+        }
+
+        function getTimeTrackPercentageFor(eventX) {
+            // left side of the player
+            var playerBaseOffset = $('#player-base').offset().left;
+
+            // unscaled left side of the track
+            var trackLeft = $('.player-time-slider .player-track').offset().left;
+
+            // position of cursor relative to the track
+            var x = eventX - trackLeft;
+
+            // unscaled width of the track
+            var trackWidth = $('.player-time-slider .player-track').width();
+
+            var percentage = x / trackWidth;
+
+            return percentage;
         }
 
         function getEventX(eve) {
@@ -1222,15 +1289,7 @@
             return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
         }
 
-        function setTimeSliderWidth() {
-            if (_totalButtonWidth === 0 ) {
-                $('.player-controls > button').each(function(){
-                    _totalButtonWidth += $(this).outerWidth(true);
-                });
-            }
-
-            $('.player-time-slider').width($('.player-controls').innerWidth() - _totalButtonWidth - _safariTimeSliderDiff);
-        }
+        // -- Audio Helpers ---------------------
 
         function createAudio() {
             _audioTrack = new Audio();
@@ -1254,8 +1313,28 @@
             }
         }
 
+        function playAudio() {
+            if (_options.audio) {
+                _audioTrack.play();
+            }
+        }
 
-        // Event Plumbing -------------------
+        function pauseAudio() {
+            if (_options.audio) {
+                _audioTrack.pause();
+            }
+        }
+
+        function getCurrentTime() {
+            if (_options.audio) {
+                return (_audioTrack.currentTime * 1000 - _timelineDifference)/1000;
+            }
+            else {
+                return _stage.getPosition() / 1000;
+            }
+        }
+
+        // -- Event Plumbing -------------------
 
         // TODO: we need to have unique IDs on internal elements 
         function trigger(type, data) {
@@ -1282,7 +1361,7 @@
             $('#player-base').unbind(type, data, fn);
         }
 
-        // Expose Public functions ----------
+        // -- Expose Public functions ----------
         this.on = on;
         this.off = off;
         this.one = one;

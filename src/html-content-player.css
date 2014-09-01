@@ -1,21 +1,11 @@
 #player-base {
-  width: 638px;
-  /*display: inline-block;*/
+  display: inline-block;
   background: #404040;
   background-image: url(./spinner.gif);
   background-repeat: no-repeat;
   background-position: center center;
-/*  border: 10px solid #EBEBEB; */
   outline: 0;
-/*
-  -webkit-box-shadow:  0 4px 20px 0 rgba(0, 0, 0, 0.4);
-  -moz-box-shadow:  0 4px 20px 0 rgba(0, 0, 0, 0.4);
-  box-shadow:  0 4px 20px 0 rgba(0, 0, 0, 0.4);
 
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px; 
-*/
   -webkit-transform-origin: 50% 100px;
   -moz-transform-origin: 50% 100px;
   -o-transform-origin: 50% 100px;
@@ -90,12 +80,11 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  /* right: 0; */
+  right: 0;
   text-align: center;
   background: rgba(0,0,0,0.5);
   height: 103px;
   padding-top: 3px;
-  width: 640px;
 
   text-shadow:
     0px 0px 8px rgba(0,0,0,1),
@@ -104,33 +93,7 @@
 
 .player-inner.fullscreen .player-subtitles {
   position: absolute;
-  bottom: -35px;
 }
-
-/*
-.player-inner.fullscreen .player-subtitles {
-  height: 130px;
-  font-size: 28px;
-}
-*/
-
-/*
-@media (max-width: 800px) {
-    .player-inner.fullscreen .player-subtitles {
-      height: 103px;
-      font-size: 21px;
-    }
-}
-
-
-@media (max-width: 500px) {
-    .player-inner.fullscreen .player-subtitles {
-    	height: 130px;
-    	font-size: 16px;
-    }
-}
-*/
-
 
 .player-current-time {
   display: none;
@@ -167,6 +130,41 @@ audio {
   word-spacing: 0px;
   white-space: nowrap;
 }
+
+/* -- Responsive Changes -------------- */
+
+@media (max-width: 768px) {
+    .player-inner .player-subtitles {
+      font-size: 16px;
+      height: 90px;
+    }
+}
+
+@media (max-width: 568px) {
+    .player-inner .player-subtitles {
+      font-size: 14px;
+      height: 84px;
+    }
+}
+
+@media (max-width: 320px) {
+    .player-inner .player-subtitles {
+      font-size: 12px;
+      height: 80px;
+    }
+
+    .player-inner .player-controls .player-back-button, 
+    .player-inner .player-controls .player-next-button {
+      display: none;
+    }
+}
+
+/* -- End Responsive ---------------- */
+
+.hidden {
+  display: none !important;
+}
+
 
 /* --- Buttons (single image for all icons: controls.png) ------------------ */
 
@@ -218,12 +216,12 @@ audio {
 .player-inner.ios .player-vol-button,
 .player-inner.android .player-vol-button { display: none; width: 0;}
 
-.player-CC-button       { background-position: -225px 0; margin-right: -7px;}
+.player-CC-button       { background-position: -225px 0;}
 .player-CC-button:hover { background-position: -225px -45px; }
 .player-CC-button.on    { background-position: -540px 0; }
 .player-CC-button.on:hover { background-position: -540px -45px; }
 
-.player-fullscreen-button       { background-position: -315px 0; margin-right: 6px;}
+.player-fullscreen-button       { background-position: -315px 0; margin-right: 6px; margin-left: -7px;}
 .player-fullscreen-button:hover { background-position: -315px -45px; }
 .player-fullscreen-button.on { background-position: -585px 0; }
 .player-fullscreen-button.on:hover { background-position: -585px -45px; }
