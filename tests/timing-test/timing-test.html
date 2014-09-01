@@ -3,17 +3,11 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-  <meta name="viewport" content="width=638">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Untitled</title>
 
-    <!-- Scripts -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-
-    <!-- Responsive stuff -->
-    <meta name="HandheldFriendly" content="True">
-    <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Scripts -->
+  <script src="./edge_includes/jquery-2.0.3.min.js"></script>
 
 <!--Adobe Edge Runtime-->
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -23,51 +17,41 @@
     </style>
 <!--Adobe Edge Runtime End-->
 
-    <!-- HTML5 Player Styles and Code ............ -->
-    <link rel="stylesheet" type="text/css" media="screen" href="/release/html-content-player.min.css" />
-    <script src="/release/html-content-player.min.js"></script>
+  <!-- HTML5 Player Styles and Code ............ -->
+  <link rel="stylesheet" type="text/css" media="screen" href="/release/html-content-player.min.css" />
+  <script src="/release/html-content-player.min.js"></script>
 
-    <style type="text/css">
+  <style type="text/css">
 
-        body {
-            background-color: #596B7C;
-        }
-        .player-parent {
-            margin: 20px auto;
-        }
+      body {
+          background-color: #596B7C;
+      }
+      .player-parent {
+          margin: 20px auto;
+      }
 
-    </style>
+  </style>
 
 </head>
 <body style="margin:0;padding:0;">
 
-  <div class="player-parent">
-    <div id="player-base">
-        <audio id="narration" audio preload="auto" autobuffer>
-          <source src="Narration.ogg" type="audio/ogg"/>
-          <source src="Narration.mp3" type="audio/mpeg"/>
-        </audio>
-        <div id="Stage" class="EDGE-40695230"></div>
-    </div>
-  </div>
+  <div id="Stage" class="EDGE-40695230"></div>
 
-    <script>
-        (function($){
+  <script>
+      (function($){
 
-          AdobeEdge.bootstrapCallback(function (compId) {
-            var stage = AdobeEdge.getComposition(compId).getStage();
-            $('#player-base').htmlcontentplayer({ duration: 30, 
-                                                  playableElement: stage,
-                                                  showTime: true,
-                                                  hidePrevButton: false,
-                                                  hideNextButton: false,
-                                                  hideVolButton: false,
-                                                  hideCCButton: false,
-                                                  hideFullScreenButton: false });
-        });
+        AdobeEdge.bootstrapCallback(function (compId) {
+          var stage = AdobeEdge.getComposition(compId).getStage();
 
-        })(jQuery);
-    </script>
+          var player = new HtmlContentPlayer({duration: 30, 
+                                              playableElement: stage,
+                                              audio: ['Narration.ogg', 'Narration.mp3'],
+                                              showTime: true,
+                                              hideCCButton: true});
+      });
+
+      })(jQuery);
+  </script>
     
 </body>
 

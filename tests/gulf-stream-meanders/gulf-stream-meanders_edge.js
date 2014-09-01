@@ -5,7 +5,7 @@
 //images folder
 var im='images/';
 
-var fonts = {};    fonts['Archivo Narrow']='<link href=\'../fonts/fonts.css\' rel=\'stylesheet\' type=\'text/css\'>';
+var fonts = {};    fonts['Archivo Narrow']='<link href=\'./template-files/fonts/fonts.css\' rel=\'stylesheet\' type=\'text/css\'>';
 
 var opts = {
     'gAudioPreloadPreference': 'auto',

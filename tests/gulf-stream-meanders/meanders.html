@@ -6,23 +6,24 @@
 
 		<title>Geoscience Animation</title>
 	    <link rel="stylesheet" type="text/css" media="screen" href="/release/html-content-player.min.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="../css/styles.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="../css/html-content-player-fixes.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="./template-files/css/styles.css" />
+		<link rel="stylesheet" type="text/css" media="screen" href="./template-files/css/html-content-player-fixes.css" />
 
-		<link href="../css/bootstrap.css" rel="stylesheet">
-		<link href="../css/bootstrap-responsive.css" rel="stylesheet">
+		<link href="./template-files/css/bootstrap.css" rel="stylesheet">
+		<link href="./template-files/css/bootstrap-responsive.css" rel="stylesheet">
 
-		<link rel="stylesheet" href="../css/template.css" />
-		<link rel="stylesheet" href="../css/template-short-instruction.css" />
+		<link rel="stylesheet" href="./template-files/css/template.css" />
+		<link rel="stylesheet" href="./template-files/css/template-short-instruction.css" />
 
-		<script src="../js/jquery-1.8.3.js"></script>
-		<script src="../js/jquery-ui-1.9.2.min.js"></script>
-		<script src="../js/modernizr.js"></script>
+    	<script src="./edge_includes/jquery-2.0.3.min.js"></script>
+    	<script src="./template-files/js/jquery-ui-1.10.0.custom.js"></script>
 
-		<!-- jquery + jquery-ui for the media player -->
+		<script src="./template-files/js/modernizr.js"></script>
+
+		<!-- Other libs for the animation -->
 		<script src="edge_includes/three.min.js"></script>
 		<script src="edge_includes/tween.min.js"></script>
-		<script src="../texturesheetanim/texturesheetanim.js"></script>
+		<script src="./template-files/texturesheetanim/texturesheetanim.js"></script>
 
 		<!--Adobe Edge Runtime-->
 	    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -34,7 +35,7 @@
 
     	<script src="/release/html-content-player.min.js"></script>
 		<script src="app.js"></script>
-		<script src="../js/template.js"></script>
+		<script src="./template-files/js/template.js"></script>
 	</head>
 
 
@@ -58,13 +59,7 @@
 					<!-- 
 					<iframe id="animation-iframe" class="template-animation" src="gulf-stream-meanders/meanders-animation.html" width="638" height="523" title="Gulf Stream Animation" ></iframe>
 					-->
-				  <div id="player-base" tabindex="1">
-				    <audio id="narration" audio preload="auto" autobuffer>
-				      <source src="images/Narration.ogg" type="audio/ogg"/>
-				      <source src="images/Narration.mp3" type="audio/mpeg"/>
-				    </audio>
 				    <div id="Stage" class="EDGE-2305382 animation"></div>
-				  </div>
 				</div>
 			</div>			
 
@@ -105,8 +100,8 @@
 			</div>
 
 			<div id="foot" class="row-fluid inline template-container" role="contentinfo">
-	            <img id="foot-left"  src="../img/always-learning-35px-2.png" alt="Always Learning">
-	            <img id="foot-right" src="../img/pearson-35px-2.png" alt="Pearson" >
+	            <img id="foot-left"  src="./template-files/img/always-learning-35px-2.png" alt="Always Learning">
+	            <img id="foot-right" src="./template-files/img/pearson-35px-2.png" alt="Pearson" >
 			</div>
 		</div>
 	</body>

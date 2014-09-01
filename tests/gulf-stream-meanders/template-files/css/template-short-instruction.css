@@ -1,0 +1,29 @@
+/*
+* PEARSON CONFIDENTIAL
+*
+* Copyright 2013 Pearson Education, Inc.
+* All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Pearson Education, Inc. and/or its subsidiaries,
+* affiliates, or assigns (collectively “Pearson Education”), and are
+* protected, without limitations, pursuant to U.S. and foreign
+* copyright and trademark laws. Dissemination of this information or
+* reproduction of this material is strictly forbidden unless prior
+* written permission is obtained from Pearson Education, Inc.
+* See website how to request for permission:
+* http://www.pearsoned.com/permissions/.
+*
+*/
+
+@media (max-width: 690px) {
+	#animation-container {
+		position: relative;
+		left: -50px;
+	}
+
+	.fullscreen #animation-container {
+		position: relative;
+		left: 0px;
+	}
+}

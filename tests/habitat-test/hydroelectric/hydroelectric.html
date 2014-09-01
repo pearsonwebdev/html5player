@@ -7,8 +7,7 @@
 	<title>RE_01_01</title>
 	
 	<!-- Scripts -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+  <script src="./edge_includes/jquery-2.0.3.min.js"></script>
 	
 <!--Adobe Edge Runtime-->
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -33,34 +32,25 @@
 </head>
 <body style="margin:0;padding:0;">
 	
-	<div id="player-base">
-        <audio id="narration" audio preload="auto" autobuffer>
-          <source src="images/Narration.ogg" type="audio/ogg"/>
-          <source src="images/Narration.mp3" type="audio/mpeg"/>
-        </audio>
-    	<div id="Stage" class="EDGE-179879352"></div>
-    </div>
+  <div id="Stage" class="EDGE-179879352"></div>
 
-    <script>
-        (function($){
+  <script>
+      (function($){
 
-          AdobeEdge.bootstrapCallback(function (compId) {
-            var stage = AdobeEdge.getComposition(compId).getStage();
+        AdobeEdge.bootstrapCallback(function (compId) {
+          var stage = AdobeEdge.getComposition(compId).getStage();
 
-            $('#player-base').htmlcontentplayer({ duration: 10, 
-                                                  playableElement: stage,
-                                                  hidePrevButton: true,
-                                                  hideNextButton: true,
-                                                  hideVolButton: true,
-                                                  hideCCButton: true,
-                                                  hideFullScreenButton: true,
-                                                  fullScreen: true
-                                                });
+          var player = new HtmlContentPlayer({duration: 10, 
+                                              playableElement: stage,
+                                              hidePrevButton: true,
+                                              hideNextButton: true,
+                                              hideCCButton: true,
+                                              hideFullScreenButton: true,
+                                              fullScreen: true});
+        });
 
-          });
-
-        })(jQuery);
-    </script>
+      })(jQuery);
+  </script>
 	
 </body>
 </html>

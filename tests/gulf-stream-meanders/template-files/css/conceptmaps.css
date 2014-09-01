@@ -1,0 +1,164 @@
+li {
+  list-style: none;
+}
+
+
+.error-display {
+  color: red;
+}
+
+#concept-map, #add-prop-canvas {
+  margin: 0px;
+  min-width: 900px;
+  /* make sure touch events aren't handled by the brower in IE 10. */
+  -ms-touch-action: none;
+}
+
+#concept-map {
+  border: 3px solid black;
+}
+
+#add-proposition-menu legend {
+  position: absolute;
+  left: -10000px;
+}
+
+#bottom-div {
+  min-width: 906px;
+}
+
+#add-proposition-menu {
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+
+  background-color: darkgrey;
+  height: 275px;
+}
+
+
+#add-proposition-button-kb {
+  top: 50%;
+  margin: 0px;
+  margin-top: -20px;
+}
+
+
+
+
+/* this should be more specific so as not to interfere with other radio buttons */
+input[type="radio"] {
+  margin-right: 5px;
+}
+
+
+#concept-map.notallowed {
+  cursor: not-allowed;
+}
+
+#errors-container {
+  position: absolute;
+  left: 0px;
+  top: 60px;
+  margin-left: 610px;
+}
+
+
+#errors-container p {
+  color: "red";
+}
+
+
+#connecting-phrase-fields-kb label,
+#first-term-fields-kb label,
+#second-term-fields-kb label {
+  display: inline;
+}
+
+
+ul {
+  margin: 0px;
+  padding-left: 0px;
+}
+
+
+.concept-map-container .instruction-container {
+  width: 24%;
+}
+
+
+.concept-map-container .media-container {
+  width: 68%;
+  float: right;
+}
+
+
+#top-buttons {
+  float: right;
+}
+
+
+@media (max-width: 1296px) {
+  .template-overlay h2.banner {
+    margin-top: 5px;
+  }
+
+  .template-overlay h2.banner:before {
+    content: none;
+  }
+
+  .template-overlay h2.banner:after {
+    content: none;
+  }
+
+
+  .template-overlay .banner {
+    padding-right: 0px;
+    padding-left:  0px;
+    margin-left: 0px;
+  }
+
+
+  /* rearrange the media container and instruction containers */
+  .concept-map-container .media-container, 
+  .concept-map-container .instruction-container {
+    position: static;
+    width: 100%;
+    display: block;
+    float: none;
+    clear: both;
+  }
+
+
+  .concept-map-container .instruction-container {
+    min-height: 0px;
+  }
+
+  #top-buttons {
+    float: left;
+  }
+}
+
+
+.graded #top-buttons {
+  display: none;
+}
+
+
+#tabs {
+  margin-bottom: -6px;
+  border-bottom: 0px solid transparent;
+  position: relative;
+  z-index: 10;
+  background-color: transparent;
+}
+
+#tabs > li {
+  margin-left: 12px;
+  margin-bottom: -3px;
+}
+
+#tabs > li > a {
+  border: 3px solid black;
+  border-bottom-color: transparent;
+}

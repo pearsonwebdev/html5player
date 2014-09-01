@@ -1,0 +1,12 @@
+#TODO {
+	display: none;
+}
+
+.done {
+	text-decoration: line-through;
+}
+
+.dontfix {
+	text-decoration: line-through;
+	color: red;
+}

@@ -1,0 +1,434 @@
+/*
+* PEARSON CONFIDENTIAL
+*
+* Copyright 2013 Pearson Education, Inc.
+* All Rights Reserved.
+*
+* NOTICE:  All information contained herein is, and remains
+* the property of Pearson Education, Inc. and/or its subsidiaries,
+* affiliates, or assigns (collectively “Pearson Education”), and are
+* protected, without limitations, pursuant to U.S. and foreign
+* copyright and trademark laws. Dissemination of this information or
+* reproduction of this material is strictly forbidden unless prior
+* written permission is obtained from Pearson Education, Inc.
+* See website how to request for permission:
+* http://www.pearsoned.com/permissions/.
+*
+*/
+
+
+* {
+	font-family: Verdana, sans-serif;
+}
+
+
+body, html { 
+	overflow-x: hidden;
+	margin: 0;
+}
+
+
+p, a {
+	font-size: 16px;
+	line-height: 24px;
+	padding-bottom: 16px;
+}
+
+p, a, h1, h2, h3, h4 {
+	color: black;
+}
+
+
+/* bootstrap disables underlined links, this re-enables it by default. */
+a {
+	text-decoration: underline;
+	color:  rgb(8, 74, 152);
+}
+
+
+a:visited {
+      color: rgb(154, 23, 72);
+}
+
+
+#template-page-wrap {
+	margin-right: 50px;
+	margin-left:  50px;
+	position: relative;
+	left: 0;
+}
+
+
+h1 {
+	font-size: large;
+	font-weight: 600;
+	/* padding: 18px 0; */
+	padding-top: 18px;
+	padding-bottom: 18px;
+	display: block;
+}
+
+
+h1 a {
+	font-size: large;
+	font-weight: 600;
+	/* padding: 18px 0; */
+	padding-top: 18px;
+	padding-bottom: 18px;
+	color: white;
+}
+
+
+h1 a:hover {
+	color: rgb(231, 244, 249);
+}
+
+
+h2 {
+	font-size: large;
+	display: block;
+	margin: 0;
+	padding: 9px 0;
+}
+
+
+h3 {
+	font-size: large;
+	font-weight: 600;
+}
+
+
+h4 {
+	font-size: large;
+	font-weight: 400;
+}
+
+
+h1, h2.banner { 
+	background-color: black;
+	color: white;
+	position: relative;
+	margin-bottom: 20px;
+	margin-left: -100px;
+	padding-left: 100px;
+	width: 100%;
+	padding-right: 100px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+h2.banner  {
+	border-top: 1px solid rgb(64, 64, 64);
+	border-bottom: 1px solid rgb(64, 64, 64);
+}
+
+/*
+h1:before, h1:after, h2.banner:before, h2.banner:after {
+	content: "";
+	background: black;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 0px;
+}
+
+
+
+
+
+h2.banner:before, h2.banner:after  {
+	margin-top: -1px;
+	margin-bottom: -1px;
+}
+
+#foot:before, h1:before, h2.banner:before {
+	right: 100%;
+}
+
+
+#foot:after, h1:after, h2.banner:after {
+	left: 100%;
+}
+*/
+
+
+#head {
+  	background-repeat: repeat;
+  	margin-top: 0;
+  	
+  	/* generated gradient */
+	background: #1c1c1c; /* Old browsers */
+	background: url(../img/background-pattern.png);
+	background-repeat: repeat-x;
+}
+
+
+#foot {
+	position: relative;
+	margin-left: -100px;
+	padding-left: 100px;
+	padding-right: 100px;
+	background-color:  rgb(54, 67, 149);
+	height: 35px;
+	-webkit-box-shadow:  0px 0px 10px 5px rgba(0, 0, 0, 0.15);
+	box-shadow:  0px 0px 10px 5px rgba(0, 0, 0, 0.15);
+}
+/*
+#foot:before, #foot:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 9999px;
+}
+
+#foot, #foot:before, #foot:after {
+	-webkit-box-shadow:  0px 0px 10px 5px rgba(0, 0, 0, 0.15);
+	box-shadow:  0px 0px 10px 5px rgba(0, 0, 0, 0.15);
+}
+
+#foot, #foot:before, #foot:after {
+	background-color:  rgb(54, 67, 149);
+	height: 35px;
+}
+*/
+
+
+#foot-right {
+	display: block;
+	float: right;
+}
+
+
+.btn {
+	border: 0px solid transparent;
+
+	background: #205f9f; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIwNWY5ZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyMDZjYTQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top, #205f9f 0%, #206ca4 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#205f9f), color-stop(100%,#206ca4)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #205f9f 0%,#206ca4 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #205f9f 0%,#206ca4 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #205f9f 0%,#206ca4 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #205f9f 0%,#206ca4 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#205f9f', endColorstr='#206ca4',GradientType=0 ); /* IE6-8 */
+
+	color: white;
+	font-weight: 400;
+	font-size: 22px;
+	padding-bottom: 11px;
+	padding-top: 12px;
+	padding-right: 24px;
+	padding-left: 24px;
+
+	margin: 2px;
+
+	text-shadow: none;
+}
+
+.btn:active {
+	background: rgb(32,108,164); /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzIwNmNhNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwZjU2YTQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top, rgb(32,108,164) 0%, rgb(15,86,164) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(32,108,164)), color-stop(100%,rgb(15,86,164))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgb(32,108,164) 0%,rgb(15,86,164) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgb(32,108,164) 0%,rgb(15,86,164) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgb(32,108,164) 0%,rgb(15,86,164) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgb(32,108,164) 0%,rgb(15,86,164) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#206ca4', endColorstr='#0f56a4',GradientType=0 ); /* IE6-8 */
+}
+
+.btn:hover {
+	color: white;
+}
+
+
+
+.btn:disabled {
+	opacity: 0.5;
+}
+
+
+div.template-study-materials {
+	background-color: rgb(231, 244, 249);
+	padding-bottom: 28px;
+	position: relative;
+	margin-top: 20px;
+
+	margin-left: -100px;
+	padding-left: 100px;
+	padding-right: 100px;
+}
+
+
+div.template-study-materials:before, div.template-study-materials.banner:after {
+	content: "";
+	background-color: rgb(231, 244, 249);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	height: 100px;
+	width: 9999px;
+}
+
+
+div.template-study-materials:before {
+	right: 100%;
+}
+
+
+div.template-study-materials:after {
+	left: 100%;
+}
+
+
+/* hide the instruction container */
+body.fullscreen .template-container.html5-media-row .instruction-container {
+	display: none;
+}
+
+/*
+body.fullscreen #foot {
+	display: block;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+*/
+
+body.fullscreen #foot-right {
+	margin-right: 25px;
+}
+
+body.fullscreen #foot-left {
+	margin-left: 25px;
+}
+
+
+body.fullscreen: {
+	margin: 0px;
+}
+
+
+body.fullscreen .template-container {
+	display: none;
+}
+
+
+body.fullscreen .template-container.html5-media-row {
+	display: block;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	padding: 0px;
+	margin: 0px;
+}
+
+
+
+.template-overlay-background {
+  background-color: #888888;
+  opacity: .7;
+  filter: alpha(opacity=70);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+
+
+.template-overlay {
+  background-color: white;
+  z-index: 11;
+  position: fixed;
+  width: 40%;
+  top: 50%;
+  left: 50%;
+  margin-top: -110px;
+  margin-left: -20%;
+  text-align: center;
+  height: 320px;
+  border-radius: 5px;
+}
+
+
+.template-overlay-buttons {
+  position: absolute;
+  bottom: 3px;
+}
+
+
+div.template-popup {
+  margin-right: 0px;
+  margin-left: 0px;
+  padding-left: 0px;
+  padding-right: 0px;
+  border-radius: 5px 5px 0px 0px;
+}
+
+
+
+.template-collapsable-row-set p {
+	margin: 0px;
+	padding: 0px;
+}
+
+.template-collapsable-icon {
+	margin-top: 3px;
+}
+
+
+.template-collapsable-row-set .template-collapsable-row {
+	border-bottom: 1px solid black;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+
+.template-collapsable-label  > div {
+	cursor: pointer;
+}
+
+
+.template-collapsable-row-set>:first-child {
+	border-top: 1px solid black;
+}
+
+
+.template-collapsable-label {
+	margin-bottom: -12px;
+}
+
+
+.template-collapsable-label-open {
+	font-weight: 600;
+}
+
+
+.template-collapsable-container {
+	background-color: white;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	padding-right: 5px;
+	margin-right: -5px;
+	padding-left: 5px;
+	margin-left: -5px;
+}
+
+@media (max-width: 767px) {
+	/* override bootstrap */
+	body {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}

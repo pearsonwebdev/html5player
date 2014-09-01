@@ -3,13 +3,14 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Untitled</title>
 
     <script src="./edge_includes/jquery-2.0.3.min.js"></script>
     
     <!-- HTML5 Player Styles and Code ............ -->
-    <link href="../../release/html-content-player.min.css" rel="stylesheet" type="text/css" />
-    <script src="../../release/html-content-player.min.js"></script>
+    <link href="/release/html-content-player.min.css" rel="stylesheet" type="text/css" />
+    <script src="/release/html-content-player.min.js"></script>
 
 
 <!--Adobe Edge Runtime-->
@@ -25,9 +26,9 @@
         body {
             background-color: #596B7C;
         }
-        #player-base {
+/*        #player-base {
             margin: 20px auto;
-        }
+        }*/
 
     </style>
 
@@ -43,10 +44,13 @@
           var stage;
 
           AdobeEdge.bootstrapCallback(function (compId) {
+
             stage = AdobeEdge.getComposition(compId).getStage();
+
             var player = new HtmlContentPlayer({duration: 10, 
-                                                playableElement: stage,  // Change playableElement to animation
-                                                audio: ['Narration.ogg', 'Narration.mp3']});
+                                                playableElement: stage,
+                                                hideCCButton: true});  // Change playableElement to animation
+                                                //audio: ['Narration.ogg', 'Narration.mp3']});
             
             // Test player's event handing ------
             // player.on('played', function(event) {

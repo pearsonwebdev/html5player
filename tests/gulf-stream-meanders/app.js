@@ -71,18 +71,19 @@ var app = (function($){
       _supports3d = browserSupportsWebGL();
 
       // Instantiate Player
-      $('#player-base').htmlcontentplayer({duration: 144,
-                                           playableElement: _stage,
-                                           poster: './images/Poster.jpg',
-                                           srt: './images/Narration.srt',
-                                           autoPlay: false,
-                                           showControls: true,
-                                           mute: false,
-                                           played: playerPlayed,
-                                           paused: playerPaused,
-                                           maximizeComplete: onMaximizeComplete,
-                                           restoreComplete: onRestoreComplete,
-                                           playerDOMReady: onPlayerDOMReady });
+      var player = new HtmlContentPlayer({duration: 144, 
+                                          playableElement: _stage,
+                                          audio: ['Narration.ogg', 'Narration.mp3'],
+                                          poster: './images/Poster.jpg',
+                                          srt: './images/Narration.srt',
+                                          showControls: true,
+                                          mute: false});
+
+      player.on('played', playerPlayed);
+      player.on('paused', playerPaused);
+      player.on('maximizeComplete', onMaximizeComplete);
+      player.on('restoreComplete', onRestoreComplete);
+      player.on('playerDOMReady', onPlayerDOMReady);
 
       // Start 3D scene, if WebGL is supported
       if (_supports3d) {
