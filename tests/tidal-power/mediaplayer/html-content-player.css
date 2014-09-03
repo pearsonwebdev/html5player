@@ -1,21 +1,3 @@
-/*
-* PEARSON CONFIDENTIAL
-*
-* Copyright 2013 Pearson Education, Inc.
-* All Rights Reserved.
-*
-* NOTICE:  All information contained herein is, and remains
-* the property of Pearson Education, Inc. and/or its subsidiaries,
-* affiliates, or assigns (collectively “Pearson Education”), and are
-* protected, without limitations, pursuant to U.S. and foreign
-* copyright and trademark laws. Dissemination of this information or
-* reproduction of this material is strictly forbidden unless prior
-* written permission is obtained from Pearson Education, Inc.
-* See website how to request for permission:
-* http://www.pearsoned.com/permissions/.
-*
-*/
-
 #player-base {
   width: 638px;
   background: #404040;
@@ -43,6 +25,10 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+#player-base.no-spin {
+  background-image: none;
 }
 
 #player-base.no-shadow {
@@ -75,6 +61,13 @@
   margin-bottom: 44px;
 }
 
+.player-alert {
+  display: none;
+  background: red;
+  color: white;
+  padding: 4px 10px;
+}
+
 .player-content.controls-hidden {
   margin-bottom: 0;
 }
@@ -96,24 +89,47 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  right: 0;
+  /* right: 0; */
   text-align: center;
   background: rgba(0,0,0,0.5);
   height: 103px;
   padding-top: 3px;
+  width: 640px;
 
   text-shadow:
     0px 0px 8px rgba(0,0,0,1),
     0px 2px 16px rgba(0,0,0,1);
-
-  /*filter: progid:DXImageTransform.Microsoft.Glow(Color=#000000,Strength=1);*/
-  /*filter: progid:DXImageTransform.Microsoft.DropShadow(color=#000000,offX=1,offY=1,positive=true);*/
 }
 
+.player-inner.fullscreen .player-subtitles {
+  position: absolute;
+  bottom: -35px;
+}
+
+/*
 .player-inner.fullscreen .player-subtitles {
   height: 130px;
   font-size: 28px;
 }
+*/
+
+/*
+@media (max-width: 800px) {
+    .player-inner.fullscreen .player-subtitles {
+      height: 103px;
+      font-size: 21px;
+    }
+}
+
+
+@media (max-width: 500px) {
+    .player-inner.fullscreen .player-subtitles {
+    	height: 130px;
+    	font-size: 16px;
+    }
+}
+*/
+
 
 .player-current-time {
   display: none;
@@ -148,14 +164,7 @@ audio {
   font-size: 0px;
   letter-spacing: 0px;
   word-spacing: 0px;
-}
-
-.player-inner.ios .player-controls {
-  font-size: 30px;
-}
-
-.player-inner.android .player-controls {
-  font-size: 30px;
+  white-space: nowrap;
 }
 
 /* --- Buttons (single image for all icons: controls.png) ------------------ */
@@ -176,11 +185,9 @@ audio {
   color: transparent;
   cursor: pointer;
 }
-
 .player-all-controls button::-moz-focus-inner  {
   border: 0;
 }
-
 .player-all-controls button.accessible:focus {
   border-color: white;
   -moz-border-radius: 5px;
@@ -207,7 +214,7 @@ audio {
 .player-vol-button:hover { background-position: -180px -45px; }
 .player-vol-button.muted { background-position: -360px 0; }
 .player-vol-button.muted:hover { background-position: -360px -45px; }
-.player-inner.ios .player-vol-button  
+.player-inner.ios .player-vol-button,
 .player-inner.android .player-vol-button { display: none; width: 0;}
 
 .player-CC-button       { background-position: -225px 0; margin-right: -7px;}
@@ -227,7 +234,7 @@ audio {
 
 /* --- Thumbs ----------------------- */
 
-.player-time-slider .thumb{
+.player-time-slider .player-thumb{
   background-position: -496px 0; 
   cursor: hand;
   cursor: pointer;
@@ -237,11 +244,11 @@ audio {
   -ms-touch-action: none;
 }
 
-.player-time-slider .thumb:hover{
+.player-time-slider .player-thumb:hover{
   background-position: -496px -45px; 
 }
 
-.player-vol-slider .thumb { 
+.player-vol-slider .player-thumb { 
   background-position: -496px 0; 
   position: absolute;
   top: -23px;
@@ -249,7 +256,7 @@ audio {
   -ms-touch-action: none;
 }
 
-.player-vol-slider .thumb:hover{
+.player-vol-slider .player-thumb:hover{
   background-position: -496px -45px; 
 }
 
@@ -261,7 +268,7 @@ audio {
   position: relative;
 }
 
-.player-time-slider .track{
+.player-time-slider .player-track{
   border: solid 1px rgba(0, 0, 0, 0.5);
   border-bottom: solid 1px rgba(255, 255, 255, 0.4);
   position: absolute;
@@ -273,17 +280,30 @@ audio {
   -moz-border-radius: 8px;
   border-radius: 8px; 
   
+  /*
   background: #555;
-  background: -moz-linear-gradient(top,  rgba(0,0,0,0.3) 0%, rgba(3,3,3,0.3) 1%, rgba(150,150,150,0.3) 46%, rgba(200,200,200,0.3) 100%); /* FF3.6+ */
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.3)), color-stop(1%,rgba(3,3,3,0.3)), color-stop(46%,rgba(150,150,150,0.3)), color-stop(100%,rgba(200,200,200,0.3))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%); /* Chrome10+,Safari5.1+ */
-  background: -o-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%); /* Opera 11.10+ */
-  background: -ms-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%); /* IE10+ */
-  background: linear-gradient(to bottom,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%); /* W3C */ 
+  background: -moz-linear-gradient(top,  rgba(0,0,0,0.3) 0%, rgba(3,3,3,0.3) 1%, rgba(150,150,150,0.3) 46%, rgba(200,200,200,0.3) 100%); 
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.3)), color-stop(1%,rgba(3,3,3,0.3)), color-stop(46%,rgba(150,150,150,0.3)), color-stop(100%,rgba(200,200,200,0.3))); 
+  background: -webkit-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%);
+  background: -o-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%);
+  background: -ms-linear-gradient(top,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%); 
+  background: linear-gradient(to bottom,  rgba(0,0,0,0.3) 0%,rgba(3,3,3,0.3) 1%,rgba(150,150,150,0.3) 46%,rgba(200,200,200,0.3) 100%); 
+  */
+
+  background: #4e4e4e; /* Old browsers */
+  background: -moz-linear-gradient(top, #4e4e4e 0%, #6f6f6f 13%, #b3b3b3 78%, #c6c6c6 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4e4e4e), color-stop(13%,#6f6f6f), color-stop(78%,#b3b3b3), color-stop(100%,#c6c6c6)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #4e4e4e 0%,#6f6f6f 13%,#b3b3b3 78%,#c6c6c6 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #4e4e4e 0%,#6f6f6f 13%,#b3b3b3 78%,#c6c6c6 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #4e4e4e 0%,#6f6f6f 13%,#b3b3b3 78%,#c6c6c6 100%); /* IE10+ */
+  background: linear-gradient(to bottom, #4e4e4e 0%,#6f6f6f 13%,#b3b3b3 78%,#c6c6c6 100%); /* W3C */
+  /* filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4e4e4e', endColorstr='#c6c6c6',GradientType=0 );  */
 }
 
-.player-time-slider .progress{
-  background: rgb(178, 196, 137);
+.player-time-slider .player-progress{
+  /* background: rgb(178, 196, 137); */
+  /* background: rgb(231, 244, 249); */
+  background: rgb(223, 73, 24);
   position: absolute;
   top: 0;
   bottom: 0;
@@ -291,6 +311,8 @@ audio {
   -moz-border-radius: 7px;
   -webkit-border-radius: 7px;
   border-radius: 7px; 
+  -ms-filter: none;
+  filter: none;
 }
 
 /* --- Volume Slider -------------------------- */
@@ -306,7 +328,7 @@ audio {
   right: 80px;
 }
 
-.player-vol-slider .track {
+.player-vol-slider .player-track {
   height: 123px;
   width: 13px;
   margin: 26px auto 0 auto;
@@ -322,8 +344,10 @@ audio {
   top: 0; bottom: 0; left: 0; right: 0;
 }
 
-.player-vol-slider .progress {
-  background: rgb(190, 209, 146);
+.player-vol-slider .player-progress {
+  /* background: rgb(190, 209, 146); */
+  /* background: rgb(231, 244, 249); */
+  background: rgb(223, 73, 24);
   position: absolute;
   bottom: 0;
   left: 0;

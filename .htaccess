@@ -1,0 +1,18 @@
+AddType image/svg+xml .svg
+AddType audio/ogg .oga
+AddType video/ogg .ogv
+AddType application/ogg .ogg
+AddType video/mp4 .mp4
+AddType font/ttf .ttf
+
+<filesMatch ".(mp3|ogg)$">
+  <ifModule mod_headers.c>
+    Header set Accept-Ranges bytes
+  </ifModule>
+</filesMatch>
+
+<filesMatch "\.(ttf|otf|eot)$">
+    <ifModule mod_headers.c>
+        Header set Access-Control-Allow-Origin "*"
+    </ifModule>
+</filesMatch>

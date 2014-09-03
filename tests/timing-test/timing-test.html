@@ -3,7 +3,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 	<title>Untitled</title>
 
   <!-- Scripts -->
@@ -18,8 +18,8 @@
 <!--Adobe Edge Runtime End-->
 
   <!-- HTML5 Player Styles and Code ............ -->
-  <link rel="stylesheet" type="text/css" media="screen" href="/release/html-content-player.min.css" />
-  <script src="/release/html-content-player.min.js"></script>
+  <link rel="stylesheet" type="text/css" media="screen" href="../../release/html-content-player.min.css" />
+  <script src="../../release/html-content-player.min.js"></script>
 
   <style type="text/css">
 
@@ -29,13 +29,16 @@
       .player-parent {
           margin: 20px auto;
       }
+      .player-container { max-width: 638px; }
 
   </style>
 
 </head>
 <body style="margin:0;padding:0;">
 
-  <div id="Stage" class="EDGE-40695230"></div>
+  <div class="player-container">
+    <div id="Stage" class="EDGE-40695230"></div>
+  </div>
 
   <script>
       (function($){

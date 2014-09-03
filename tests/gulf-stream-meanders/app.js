@@ -18,8 +18,9 @@
 
 // Module pattern
 var app = (function($){
+'use strict';
 
-// See Notes at bottom of this document
+  // See Notes at bottom of this document
 
   var _stage;
 
@@ -46,16 +47,6 @@ var app = (function($){
   //   "Constructor" ---
   // ---------------------------------------------------
 
-// borrowed from media player
-   function transElem(element, transform) 
-    {
-      element.css('-webkit-transform', transform);
-      element.css('-moz-transform', transform);
-      element.css('-o-transform', transform);
-      element.css('transform', transform);
-      element.css('-ms-transform', transform);
-    }
-
   function init(opts) {
     var onMaximizeComplete = opts.onMaximizeComplete;
     var onRestoreComplete = opts.onRestoreComplete;
@@ -68,7 +59,9 @@ var app = (function($){
       _rotationHelper = $('#Stage_Earth3DRotationHelper')[0];
       _titleOpacityHelper = $('#Stage_Title3DOpacityHelper')[0];
       _stage = AdobeEdge.getComposition(compId).getStage();
-      _supports3d = browserSupportsWebGL();
+
+      // TODO: Make 3D work again
+      _supports3d = false; //browserSupportsWebGL();
 
       // Instantiate Player
       var player = new HtmlContentPlayer({duration: 144, 
@@ -76,7 +69,6 @@ var app = (function($){
                                           audio: ['Narration.ogg', 'Narration.mp3'],
                                           poster: './images/Poster.jpg',
                                           srt: './images/Narration.srt',
-                                          showControls: true,
                                           mute: false});
 
       player.on('played', playerPlayed);
@@ -193,7 +185,9 @@ var app = (function($){
     var sceneHeight = $('#Stage_EarthParent').height();
 
     camera = new THREE.PerspectiveCamera( 60, sceneWidth / sceneHeight, 1, 10000 );
-    camera.position = { x: -200, y: 200, z: 315 };
+    camera.position.x = -200;
+    camera.position.y = 200;
+    camera.position.z = 315;
     scene = new THREE.Scene();
     meshGroup = new THREE.Object3D();
     scene.add( meshGroup );
@@ -207,7 +201,7 @@ var app = (function($){
 
     // Lights ---------------------
 
-    directionalLight = new THREE.DirectionalLight( 0xffffff, 1.2 );
+    var directionalLight = new THREE.DirectionalLight( 0xffffff, 1.2 );
     directionalLight.position.set( -4, 1, 1 );
     meshGroup.add( directionalLight );
 
@@ -242,9 +236,16 @@ var app = (function($){
     _titleMaterial = new THREE.MeshPhongMaterial({map: THREE.ImageUtils.loadTexture('images/textures/title.png'), opacity: 1, transparent: true});
     var titleMesh = new THREE.Mesh( titleGeometry, _titleMaterial );
     meshGroup.add( titleMesh );
-    titleMesh.position = {x: -140, y: 130, z: 270};
-    titleMesh.rotation = {x: deg2rad(-32), y: deg2rad(-26), z: deg2rad(-16.8)};
-    titleMesh.scale = {x:0.3, y: 0.3, z: 1};
+
+    titleMesh.position.x = -140;
+    titleMesh.position.y = 130;
+    titleMesh.position.z = 270;
+    titleMesh.rotation.x = deg2rad(-32);
+    titleMesh.rotation.y = deg2rad(-26);
+    titleMesh.rotation.z = deg2rad(-16.8);
+    titleMesh.scale.x = 0.3;
+    titleMesh.scale.y = 0.3;
+    titleMesh.scale.z = 1;
   }
 
   // ---------------------------------------------------
@@ -322,6 +323,15 @@ var app = (function($){
 
   function deg2rad(degrees) {
     return degrees * 0.017453293;
+  }
+
+  // borrowed from media player
+  function transElem(element, transform) {
+    element.css('-webkit-transform', transform);
+    element.css('-moz-transform', transform);
+    element.css('-o-transform', transform);
+    element.css('transform', transform);
+    element.css('-ms-transform', transform);
   }
 
   // ---------------------------------------------------

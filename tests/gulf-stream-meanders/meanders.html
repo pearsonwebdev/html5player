@@ -2,12 +2,11 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 
 		<title>Geoscience Animation</title>
-	    <link rel="stylesheet" type="text/css" media="screen" href="/release/html-content-player.min.css" />
+	    <link rel="stylesheet" type="text/css" media="screen" href="../../release/html-content-player.min.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="./template-files/css/styles.css" />
-		<link rel="stylesheet" type="text/css" media="screen" href="./template-files/css/html-content-player-fixes.css" />
 
 		<link href="./template-files/css/bootstrap.css" rel="stylesheet">
 		<link href="./template-files/css/bootstrap-responsive.css" rel="stylesheet">
@@ -30,10 +29,11 @@
 	    <script type="text/javascript" charset="utf-8" src="gulf-stream-meanders_edgePreload.js"></script>
 	    <style>
 	        .edgeLoad-EDGE-2305382 { visibility:hidden; }
+	        .player-container { max-width: 636px; }
 	    </style>
 		<!--Adobe Edge Runtime End-->
 
-    	<script src="/release/html-content-player.min.js"></script>
+    	<script src="../../release/html-content-player.min.js"></script>
 		<script src="app.js"></script>
 		<script src="./template-files/js/template.js"></script>
 	</head>
@@ -59,7 +59,9 @@
 					<!-- 
 					<iframe id="animation-iframe" class="template-animation" src="gulf-stream-meanders/meanders-animation.html" width="638" height="523" title="Gulf Stream Animation" ></iframe>
 					-->
-				    <div id="Stage" class="EDGE-2305382 animation"></div>
+  					<div class="player-container">
+				    	<div id="Stage" class="EDGE-2305382"></div>
+				    </div>
 				</div>
 			</div>			
 

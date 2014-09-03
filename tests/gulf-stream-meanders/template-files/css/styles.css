@@ -33,12 +33,8 @@ body .EDGE-2305382, body .EDGE-2305382 * {
   visibility:hidden; 
 }
 
-#player-base {
-  width: 638px;
-}
-
-#Stage {
-  height: 480px;
+div[id*=Stage] {
+  line-height: normal;
 }
 
 .text-with-bkg{

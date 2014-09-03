@@ -40,6 +40,9 @@ module.exports = function(grunt) {
                             if (req.url.match(/\.ttf$/)) {
                                 res.setHeader('Content-Type', 'font/ttf');
                             }
+                            if (req.url.match(/\.js$/)) {
+                                res.setHeader('Content-Type', 'application/javascript');
+                            }
                             if (req.url.match(/\.(ttf|otf|eot)$/)) {
                                 res.setHeader('Access-Control-Allow-Origin', '*');
                             }
@@ -66,9 +69,9 @@ module.exports = function(grunt) {
             js: {
                 options: {
                     banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' + '<%= grunt.template.today("yyyy-mm-dd") %> */\n',
-                    compress: false,
-                    mangle: false,
-                    beautify: true
+                    //compress: false,
+                    //mangle: false,
+                    //beautify: true
                 },
                 files: {
                     '<%= releaseDir %>/html-content-player.min.js': ['<%= srcDir %>/html-content-player.js', '<%= srcDir %>/parseSRT.js']
@@ -83,7 +86,8 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: '<%= srcDir %>',
                     src: ['*.png',
-                          '*.gif'],
+                          '*.gif',
+                          '*.svg'],
                     dest: '<%= releaseDir %>',
                     filter: 'isFile',
                     nonull: true

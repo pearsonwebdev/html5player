@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+	<title>RE_01_003b</title>
+	
+	<!-- Scripts -->
+    <script src="./edge_includes/jquery-2.0.3.min.js"></script>
+	
+    <!-- HTML5 Player Styles and Code ............ -->
+    <link href="../../release/html-content-player.min.css" rel="stylesheet" type="text/css" />
+    <script src="../../release/html-content-player.min.js"></script>
+    
+<!--Adobe Edge Runtime-->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script type="text/javascript" charset="utf-8" src="tidal-power_edgePreload.js"></script>
+    <style>
+        .edgeLoad-EDGE-15288829 { visibility:hidden; }
+        .player-container { max-width: 638px; }
+    </style>
+<!--Adobe Edge Runtime End-->
+
+</head>
+<body style="margin:0;padding:0;">
+
+    <div class="player-container">
+        <div id="Stage" class="EDGE-15288829"></div>
+    </div>
+
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+
+    <script>
+        (function($){
+
+          var stage;
+
+          AdobeEdge.bootstrapCallback(function (compId) {
+
+            stage = AdobeEdge.getComposition(compId).getStage();
+            var player = new HtmlContentPlayer({duration: 14.5,
+                                                playableElement: stage,
+                                                hidePrevButton: true,
+                                                hideNextButton: true,
+                                                hideVolButton: true,
+                                                hideCCButton: true,
+                                                hideFullScreenButton: true});
+          });
+
+        })(jQuery);
+    </script>
+
+</body>
+</html>

@@ -19,11 +19,13 @@
 @media (max-width: 690px) {
 	#animation-container {
 		position: relative;
-		left: -50px;
+		margin-left: -50px;
+        margin-right: -50px;
 	}
 
 	.fullscreen #animation-container {
 		position: relative;
-		left: 0px;
+    	margin-left: 0;
+        margin-right: 0;
 	}
 }

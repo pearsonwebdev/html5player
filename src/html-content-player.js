@@ -68,9 +68,8 @@
             throw(': Please set the htmlcontentplayer\'s "playableElement" property to the animation\'s stage');
         }
 
-        // TODO: More options checking?
-
         // Cache frequently used elements
+        var _playerBase;
         var _playerContent;
         var _playerControls;
         var _playButton;
@@ -141,6 +140,7 @@
 
         function layoutReady() {
             // Cache frequently used elements
+            _playerBase = $('#player-base');
             _playerContent = $('.player-content');
             _playerControls = $('.player-controls');
             _playButton = $('.player-play-button');
@@ -196,7 +196,7 @@
 
             // Reparent the animation div
             _playerContent.append(_stageElem);
-            $('#player-base').unwrap();
+            _playerBase.unwrap();
 
             _baseContentHeight = _playerContent.height() ;
             _baseContentWidth = _playerContent.width();
@@ -235,7 +235,10 @@
                 window.AdobeEdge.Symbol.bindTimelineAction(_stage.getComposition().compId, 'stage', 'Default Timeline', 'complete', playEnded);
                 $('.player-vol-button').remove();
             }
-            // TODO: other condition for non-edge anims, need to listen to their update function
+            else {
+                // Handle this condition for non-Adobe Edge animations that have no audio.
+                // The player will have to listen to 'update' and 'complete' events from the Non-edge animation
+            }
 
 
             // detect iOS
@@ -292,7 +295,7 @@
             }
 
             //hide loading spinner
-            $('#player-base, .player-inner').css('background-image', 'none');
+            $('.player-container').removeClass('player-container');
         }
 
         // -- CORE FUNCTIONALITY ----------------------------------
@@ -636,13 +639,13 @@
                     else if (newTime <= timeline.position) {
                         var beforeTime = (isReverse) ? triggerSymbol.getDuration() : 0;
                         triggerSymbol.seek(beforeTime);
-                        stopAllChildSymbols(triggerSymbol, 0);
+                        stopAllChildSymbols(triggerSymbol, beforeTime);
                     }
                     // if the newTime is after the symbol, set the symbol time to the duration
                     else if (newTime >= timelineEnd) {
                         var afterTime = (isReverse) ? 0 : triggerSymbol.getDuration();
                         triggerSymbol.seek(afterTime);
-                        stopAllChildSymbols(triggerSymbol, triggerSymbol.getDuration());
+                        stopAllChildSymbols(triggerSymbol, afterTime);
                     }
                 }
 
@@ -776,8 +779,6 @@
             if (_isVolThumbDown) return;
 
             _isVolThumbDown = true;
-            // var y = (event.offsetY) ? event.offsetY : event.originalEvent.layerY;
-            // var percentage = y/$('.player-vol-slider .player-track').height();
             var eventY = getEventY(event);
             var percentage = getVolSliderPercentageFor(eventY);
 
@@ -989,8 +990,6 @@
                 event.stopPropagation();
                 event.preventDefault();
                 var eventX = getEventX(event);
-                // var x = eventX - $('.player-time-slider .player-track').offset().left;
-                // var percentage = x/$('.player-time-slider .player-track').width();
                 var percentage = getTimeTrackPercentageFor(eventX);
                 gotoTimeAsPercentage(Math.min(percentage, 1));
             }
@@ -998,8 +997,6 @@
                 event.stopPropagation();
                 event.preventDefault();
                 var eventY = getEventY(event);
-                // var y = eventY - $('.player-vol-slider .player-track').offset().top;
-                // var percentage = y/$('.player-vol-slider .player-track').height();
                 var percentage = getVolSliderPercentageFor(eventY);
                 adjustVolume(1 - Math.max(0,Math.min(1,percentage)));
             }
@@ -1060,12 +1057,11 @@
             var bodyHeight = $(window).height() - $('.player-controls').height();
 
             var scale = Math.min(bodyWidth/_stageElem.width(), bodyHeight/_stageElem.height());
-            //scaleElem($('#player-base'), scale);
 
-            $('#player-base').addClass('no-shadow');
+            _playerBase.addClass('no-shadow');
             $('.player-inner').appendTo('body');
             $('.player-inner').addClass('fullscreen');
-            $('#player-base').css('opacity', 0);
+            _playerBase.css('opacity', 0);
 
             $('.player-fullscreen-button').addClass('on');
             $('.player-fullscreen-button').html('Restore from full screen');
@@ -1098,13 +1094,12 @@
             $('.player-fullscreen-button').html('Go to full screen');
             $('.player-inner').appendTo('#player-base');
             $('.player-inner').removeClass('fullscreen');
-            $('#player-base').removeClass('no-shadow');
-            $('#player-base').css('opacity', 1);
+            _playerBase.removeClass('no-shadow');
+            _playerBase.css('opacity', 1);
 
             _stageElem.css('left',0);
 
             var scale = _stageElem.width()/_playerContent.width();
-            //scaleElem($('#player-base'), scale);
             scaleElem(_stageElem, scale);
 
             _subtitles.removeClass('fullscreen');
@@ -1114,13 +1109,14 @@
 
             setTimeSliderWidth();
 
+            _isFullscreen = false;
+
             fitIntoWindow();
 
             if(showFocus) {
                 $('.player-fullscreen-button').focus();
             }
 
-            _isFullscreen = false;
             trigger('restoreComplete', null, null);
         }
 
@@ -1130,15 +1126,9 @@
                 var bodyHeight = $(window).height() - $('.player-controls').height();
 
                 var scale = Math.min(bodyWidth/_stageElem.width(), bodyHeight/_stageElem.height());
-                //var _subs = $('.player-subtitles');
-
-                //scalePlayer(1.0);
                 scaleElem(_stageElem, scale);
-                //scaleElem(_subs, scale, 'left ' + (_subs.height()) + 'px');
 
                 _stageElem.css('left', (bodyWidth - _stageElem.width()*scale)/2);
-                //_subs.css('left', (bodyWidth - _stageElem.width()*scale)/2);
-                //_subs.css('bottom', 42-$('.player-controls').height()*scale);
 
                 setTimeSliderWidth();
 
@@ -1164,19 +1154,36 @@
                 return;
             }
 
-            var win = $(window);
+            var winWidth = $(window).innerWidth();
+            var winHeight = $(window).innerHeight();
+
             // Using "+ 2" on the window's size since the player-content
             // element has a -1px margin all around. Somewhat brittle.
-            var w = Math.min(win.width() + 2, _baseContentWidth);
-            var h = Math.min(win.height() + 2, _baseContentHeight);
-            var scale = Math.min(w/_baseContentWidth, h/_baseContentHeight);
+            var w = Math.min(winWidth + 2, _baseContentWidth);
+            var h = Math.min(winHeight + 6 - $('.player-controls').height(), _baseContentHeight);
+            var wScale = w/_baseContentWidth;
+            var hScale = h/_baseContentHeight;
 
-            scaleElem(_playerContent, scale);
+            var contentScale = Math.min(wScale, hScale);
 
-            _playerContent.height(_baseContentHeight * scale);
-            _playerContent.width(_baseContentWidth * scale);
+            scaleElem(_playerContent, contentScale);
+            _playerContent.height(_baseContentHeight * contentScale);
+            _playerContent.width(_baseContentWidth * wScale);
 
-            if (scale < 1) {
+            if (winWidth < _baseContentWidth){
+                _playerContent.css('margin-left', (winWidth - (_baseContentWidth * contentScale))/2);
+                _playerContent.css('margin-right', -(winWidth - (_baseContentWidth * contentScale))/2);
+            }
+            else if (contentScale < 1) {
+                _playerContent.css('margin-left', (_playerBase.width() - (_baseContentWidth * contentScale))/2);
+                _playerContent.css('margin-right', -(_playerBase.width() - (_baseContentWidth * contentScale))/2);
+            }
+            else {
+                _playerContent.css('margin-left', 0);
+                _playerContent.css('margin-right', 0);
+            }
+            
+            if (wScale < 1) {
                 $('.player-fullscreen-button').hide();
             }
             else {
@@ -1185,6 +1192,49 @@
 
             setTimeSliderWidth();
         }
+
+        // function fitIntoWindow() {
+
+        //     if (_isFullscreen) {
+        //         return;
+        //     }
+
+        //     var winWidth = $(window).innerWidth();
+        //     var winHeight = $(window).innerHeight();
+
+        //     if (winWidth > _baseContentWidth) {
+        //         return;
+        //     }
+
+        //     // Using "+ 2" on the window's size since the player-content
+        //     // element has a -1px margin all around. Somewhat brittle.
+        //     var w = Math.min(winWidth + 2, _baseContentWidth);
+        //     var h = Math.min(winHeight + 2, _baseContentHeight);
+        //     var wScale = w/_baseContentWidth;
+        //     var hScale = h/_baseContentHeight;
+
+        //     if (winWidth < winHeight || winHeight < _baseContentHeight) { // portrait
+        //         scaleElem(_playerContent, wScale);
+        //         _playerContent.height(_baseContentHeight * wScale);
+        //         _playerContent.width(_baseContentWidth * wScale);
+        //         _playerContent.css('margin-left', 0);
+        //     }
+        //     else { // landscape
+        //         scaleElem(_playerContent, hScale);
+        //         _playerContent.height(_baseContentHeight * hScale);
+        //         _playerContent.width(_baseContentWidth * wScale);
+        //         _playerContent.css('margin-left', (winWidth - _stageElem.width()*hScale)/2);
+        //     }
+
+        //     if (wScale < 1) {
+        //         $('.player-fullscreen-button').hide();
+        //     }
+        //     else {
+        //         $('.player-fullscreen-button').show();
+        //     }
+
+        //     setTimeSliderWidth();
+        // }
 
         function setTimeSliderWidth() {
 
@@ -1195,14 +1245,6 @@
             });
 
             $('.player-time-slider').width($('.player-inner').innerWidth() - totalButtonWidth - _safariTimeSliderDiff);
-        }
-
-        function scalePlayer(scale) {
-            scaleElem($('#player-base'), scale);
-        }
-
-        function clearScalePlayer() {
-            scalePlayer(1.0);
         }
 
         function transElem(element, transform) {
@@ -1233,7 +1275,7 @@
         }
 
         function getVolSliderPercentageFor(eventY) {
-            var playerBaseOffset = $('#player-base').offset().top;
+            var playerBaseOffset = _playerBase.offset().top;
             var trackTop = $('.player-vol-slider .player-track').offset().top;
             var y = eventY - trackTop;
             var trackHeight =   $('.player-vol-slider .player-track').height();
@@ -1243,7 +1285,7 @@
 
         function getTimeTrackPercentageFor(eventX) {
             // left side of the player
-            var playerBaseOffset = $('#player-base').offset().left;
+            var playerBaseOffset = _playerBase.offset().left;
 
             // unscaled left side of the track
             var trackLeft = $('.player-time-slider .player-track').offset().left;
@@ -1259,26 +1301,26 @@
             return percentage;
         }
 
-        function getEventX(eve) {
-            if (eve.originalEvent.touches && eve.originalEvent.touches[0].pageX)
-                return eve.originalEvent.touches[0].pageX;
-            if(eve.clientX)
-                return eve.clientX;
-            if (eve.originalEvent.layerX)
-                return eve.originalEvent.layerX;
+        function getEventX(event) {
+            if (event.originalEvent.touches && event.originalEvent.touches[0].pageX)
+                return event.originalEvent.touches[0].pageX;
+            if(event.clientX)
+                return event.clientX;
+            if (event.originalEvent.layerX)
+                return event.originalEvent.layerX;
 
             return 0;
         }
 
-        function getEventY(eve) {
-            if (eve.originalEvent.touches && eve.originalEvent.touches[0].pageY)
-                return eve.originalEvent.touches[0].pageY;
-            if(eve.pageY)
-                return eve.pageY;
-            if(eve.clientY)
-                return eve.clientY;
-            if (eve.originalEvent.layerY)
-                return eve.originalEvent.layerY;
+        function getEventY(event) {
+            if (event.originalEvent.touches && event.originalEvent.touches[0].pageY)
+                return event.originalEvent.touches[0].pageY;
+            if(event.pageY)
+                return event.pageY;
+            if(event.clientY)
+                return event.clientY;
+            if (event.originalEvent.layerY)
+                return event.originalEvent.layerY;
 
             return 0;
         }
@@ -1336,7 +1378,6 @@
 
         // -- Event Plumbing -------------------
 
-        // TODO: we need to have unique IDs on internal elements 
         function trigger(type, data) {
             $('#player-base').trigger(type, data);
         }
