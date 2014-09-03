@@ -17,7 +17,10 @@
     <script type="text/javascript" charset="utf-8" src="width-test_edgePreload.js"></script>
     <style>
         .edgeLoad-EDGE-342396983 { visibility:hidden; }
-        .player-container { max-width: 638px; }
+        .text {
+          margin: 20px;
+          max-width: 638px;
+        }
     </style>
 <!--Adobe Edge Runtime End-->
 
@@ -28,7 +31,17 @@
 	   <div id="Stage" class="EDGE-342396983"></div>
   </div>
 
-  <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+  <div class="text">
+    <p>This animation allows for testing the following features:</p>
+    <ul>
+      <li>No audio playback (previously the player required an audio track)</li>
+      <li>Different width (previously the player was restricted to 640px wide)</li>
+      <li>How well the player resizes with various browser widths especially on mobile devices. Click "CC" to also see the subtitle box resize.</li>
+      <li>Symbol triggering at various times</li>
+    </ul>
+    <p>Please note, the black numbers that flash in are individual symbols that are being triggered at various times.</p>
+  <div>
+
 
     <script>
       (function($){
@@ -37,6 +50,7 @@
           var stage = AdobeEdge.getComposition(compId).getStage();
           var player = new HtmlContentPlayer({duration: 4, 
                                               playableElement: stage,
+                                              showTime: true,
                                               srt: 'narration.srt'});
         });
 

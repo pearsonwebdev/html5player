@@ -140,7 +140,7 @@ module.exports = function(grunt) {
 
         open: {
             dev: {
-                path: 'http://localhost:8000/tests/index.html'
+                path: 'http://localhost:8000/tests/all-tests.html'
             }
         },
 

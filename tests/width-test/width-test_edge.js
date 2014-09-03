@@ -160,33 +160,39 @@ var symbols = {
                 opacity: 0.12010924057747,
                 fill: ["rgba(255,255,255,1.00)"],
                 stroke: [0,"rgb(0, 0, 0)","none"]
+            },
+            {
+                id: 'sym_one',
+                type: 'rect',
+                rect: ['177', '163','auto','auto','auto', 'auto']
+            },
+            {
+                id: 'sym_two',
+                type: 'rect',
+                rect: ['229', '163','auto','auto','auto', 'auto']
+            },
+            {
+                id: 'sym_three',
+                type: 'rect',
+                rect: ['389', '163','auto','auto','auto', 'auto']
             }],
             symbolInstances: [
-
+            {
+                id: 'sym_three',
+                symbolName: 'sym_three'
+            },
+            {
+                id: 'sym_two',
+                symbolName: 'sym_two'
+            },
+            {
+                id: 'sym_one',
+                symbolName: 'sym_one'
+            }
             ]
         },
     states: {
         "Base State": {
-            "${_Ellipse2Copy12}": [
-                ["style", "top", '-56px'],
-                ["color", "background-color", 'rgba(255,255,255,1)'],
-                ["style", "height", '135px'],
-                ["style", "opacity", '0.10318215724414'],
-                ["style", "left", '555px'],
-                ["style", "width", '135px']
-            ],
-            "${_Ellipse2}": [
-                ["color", "background-color", 'rgba(255,255,255,1.00)'],
-                ["style", "opacity", '0.20696773373984']
-            ],
-            "${_Ellipse2Copy14}": [
-                ["style", "top", '-144px'],
-                ["color", "background-color", 'rgba(255,255,255,1)'],
-                ["style", "height", '582px'],
-                ["style", "opacity", '0.037220520520113'],
-                ["style", "left", '359px'],
-                ["style", "width", '582px']
-            ],
             "${_Ellipse2Copy13}": [
                 ["style", "top", '180px'],
                 ["color", "background-color", 'rgba(255,255,255,1)'],
@@ -195,27 +201,8 @@ var symbols = {
                 ["style", "left", '279px'],
                 ["style", "width", '87px']
             ],
-            "${_Ellipse2Copy}": [
-                ["color", "background-color", 'rgba(255,255,255,1)'],
-                ["style", "opacity", '0.20696772634983063'],
-                ["style", "left", '248px'],
-                ["style", "top", '21px']
-            ],
-            "${_Ellipse2Copy7}": [
-                ["style", "top", '51px'],
-                ["color", "background-color", 'rgba(255,255,255,1)'],
-                ["style", "height", '121px'],
-                ["style", "opacity", '0.20696772634983063'],
-                ["style", "left", '378px'],
-                ["style", "width", '121px']
-            ],
-            "${_Ellipse2Copy8}": [
-                ["style", "top", '51px'],
-                ["color", "background-color", 'rgba(255,255,255,1)'],
-                ["style", "height", '55px'],
-                ["style", "opacity", '0.20696772634983063'],
-                ["style", "left", '461px'],
-                ["style", "width", '55px']
+            "${_sym_three}": [
+                ["style", "left", '579px']
             ],
             "${_Ellipse2Copy9}": [
                 ["style", "top", '287px'],
@@ -247,27 +234,30 @@ var symbols = {
                 ["style", "left", '602px'],
                 ["style", "width", '135px']
             ],
-            "${_Ellipse2Copy11}": [
-                ["style", "top", '300px'],
+            "${_Ellipse2Copy7}": [
+                ["style", "top", '51px'],
                 ["color", "background-color", 'rgba(255,255,255,1)'],
-                ["style", "height", '55px'],
+                ["style", "height", '121px'],
                 ["style", "opacity", '0.20696772634983063'],
-                ["style", "left", '64px'],
-                ["style", "width", '55px']
+                ["style", "left", '378px'],
+                ["style", "width", '121px']
             ],
-            "${_Stage}": [
-                ["color", "background-color", 'rgba(72,88,103,1)'],
-                ["style", "width", '800px'],
-                ["style", "height", '400px'],
-                ["style", "overflow", 'hidden']
+            "${_sym_two}": [
+                ["style", "left", '374px']
             ],
-            "${_Ellipse2Copy4}": [
-                ["style", "top", '200px'],
+            "${_Ellipse2Copy12}": [
+                ["style", "top", '-56px'],
                 ["color", "background-color", 'rgba(255,255,255,1)'],
-                ["style", "height", '55px'],
+                ["style", "height", '135px'],
+                ["style", "opacity", '0.10318215724414'],
+                ["style", "left", '555px'],
+                ["style", "width", '135px']
+            ],
+            "${_Ellipse2Copy}": [
+                ["color", "background-color", 'rgba(255,255,255,1)'],
                 ["style", "opacity", '0.20696772634983063'],
-                ["style", "left", '527px'],
-                ["style", "width", '55px']
+                ["style", "left", '248px'],
+                ["style", "top", '21px']
             ],
             "${_Ellipse2Copy2}": [
                 ["style", "top", '95px'],
@@ -277,11 +267,53 @@ var symbols = {
                 ["style", "left", '71px'],
                 ["style", "width", '221px']
             ],
+            "${_Ellipse2}": [
+                ["color", "background-color", 'rgba(255,255,255,1.00)'],
+                ["style", "opacity", '0.20696773373984']
+            ],
             "${_Ellipse2Copy5}": [
                 ["color", "background-color", 'rgba(255,255,255,1)'],
                 ["style", "opacity", '0.20696772634983063'],
                 ["style", "left", '640px'],
                 ["style", "top", '38px']
+            ],
+            "${_Ellipse2Copy11}": [
+                ["style", "top", '300px'],
+                ["color", "background-color", 'rgba(255,255,255,1)'],
+                ["style", "height", '55px'],
+                ["style", "opacity", '0.20696772634983063'],
+                ["style", "left", '64px'],
+                ["style", "width", '55px']
+            ],
+            "${_Ellipse2Copy8}": [
+                ["style", "top", '51px'],
+                ["color", "background-color", 'rgba(255,255,255,1)'],
+                ["style", "height", '55px'],
+                ["style", "opacity", '0.20696772634983063'],
+                ["style", "left", '461px'],
+                ["style", "width", '55px']
+            ],
+            "${_Ellipse2Copy4}": [
+                ["style", "top", '200px'],
+                ["color", "background-color", 'rgba(255,255,255,1)'],
+                ["style", "height", '55px'],
+                ["style", "opacity", '0.20696772634983063'],
+                ["style", "left", '527px'],
+                ["style", "width", '55px']
+            ],
+            "${_Stage}": [
+                ["color", "background-color", 'rgba(72,88,103,1)'],
+                ["style", "overflow", 'hidden'],
+                ["style", "height", '400px'],
+                ["style", "width", '800px']
+            ],
+            "${_Ellipse2Copy14}": [
+                ["style", "top", '-144px'],
+                ["color", "background-color", 'rgba(255,255,255,1)'],
+                ["style", "height", '582px'],
+                ["style", "opacity", '0.037220520520113'],
+                ["style", "left", '359px'],
+                ["style", "width", '582px']
             ]
         }
     },
@@ -292,7 +324,229 @@ var symbols = {
             duration: 4000,
             autoPlay: false,
             timeline: [
-                { id: "eid1", tween: [ "color", "${_Stage}", "background-color", 'rgba(255,255,255,1.00)', { animationColorSpace: 'RGB', valueTemplate: undefined, fromValue: 'rgba(72,88,103,1)'}], position: 0, duration: 4000 }            ]
+                { id: "eid1", tween: [ "color", "${_Stage}", "background-color", 'rgba(212,217,220,1.00)', { animationColorSpace: 'RGB', valueTemplate: undefined, fromValue: 'rgba(72,88,103,1)'}], position: 0, duration: 4000 },
+                { id: "eid15", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym_one}', [] ], ""], position: 750 },
+                { id: "eid16", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym_two}', [] ], ""], position: 1750 },
+                { id: "eid17", trigger: [ function executeSymbolFunction(e, data) { this._executeSymbolAction(e, data); }, ['play', '${_sym_three}', [] ], ""], position: 2750 }            ]
+        }
+    }
+},
+"sym_one": {
+    version: "4.0.1",
+    minimumCompatibleVersion: "4.0.1",
+    build: "4.0.1.365",
+    baseState: "Base State",
+    scaleToFit: "none",
+    centerStage: "none",
+    initialState: "Base State",
+    gpuAccelerate: false,
+    resizeInstances: false,
+    content: {
+            dom: [
+                {
+                    rect: ['-17px', '-17px', '87px', '87px', 'auto', 'auto'],
+                    borderRadius: ['10px', '10px', '10px', '10px'],
+                    id: 'RoundRect',
+                    stroke: [0, 'rgba(0,0,0,1)', 'none'],
+                    type: 'rect',
+                    fill: ['rgba(46,46,46,1.00)'],
+                    c: [
+                    {
+                        rect: ['28px', '17px', '29px', '38px', 'auto', 'auto'],
+                        font: ['Arial, Helvetica, sans-serif', 48, 'rgba(255,255,255,1.00)', 'normal', 'none', ''],
+                        id: 'Text',
+                        text: '1',
+                        align: 'center',
+                        type: 'text'
+                    }]
+                }
+            ],
+            symbolInstances: [
+            ]
+        },
+    states: {
+        "Base State": {
+            "${_RoundRect}": [
+                ["style", "top", '-17px'],
+                ["transform", "scaleY", '0.6'],
+                ["transform", "scaleX", '0.6'],
+                ["style", "opacity", '0'],
+                ["style", "left", '-17px'],
+                ["color", "background-color", 'rgba(46,46,46,1.00)']
+            ],
+            "${_Text}": [
+                ["style", "top", '17px'],
+                ["style", "text-align", 'center'],
+                ["color", "color", 'rgba(255,255,255,1.00)'],
+                ["style", "width", '29px'],
+                ["style", "left", '28px'],
+                ["style", "font-size", '48px']
+            ],
+            "${symbolSelector}": [
+                ["style", "height", '52px'],
+                ["style", "width", '52px']
+            ]
+        }
+    },
+    timelines: {
+        "Default Timeline": {
+            fromState: "Base State",
+            toState: "",
+            duration: 500,
+            autoPlay: false,
+            timeline: [
+                { id: "eid10", tween: [ "transform", "${_RoundRect}", "scaleY", '1', { fromValue: '0.6'}], position: 0, duration: 250 },
+                { id: "eid12", tween: [ "transform", "${_RoundRect}", "scaleY", '0.6', { fromValue: '1'}], position: 259, duration: 241 },
+                { id: "eid3", tween: [ "style", "${_RoundRect}", "opacity", '1', { fromValue: '0'}], position: 0, duration: 250 },
+                { id: "eid4", tween: [ "style", "${_RoundRect}", "opacity", '0', { fromValue: '1'}], position: 250, duration: 250 },
+                { id: "eid8", tween: [ "transform", "${_RoundRect}", "scaleX", '1', { fromValue: '0.6'}], position: 0, duration: 250 },
+                { id: "eid11", tween: [ "transform", "${_RoundRect}", "scaleX", '0.6', { fromValue: '1'}], position: 259, duration: 241 }            ]
+        }
+    }
+},
+"sym_two": {
+    version: "4.0.1",
+    minimumCompatibleVersion: "4.0.1",
+    build: "4.0.1.365",
+    baseState: "Base State",
+    scaleToFit: "none",
+    centerStage: "none",
+    initialState: "Base State",
+    gpuAccelerate: false,
+    resizeInstances: false,
+    content: {
+            dom: [
+                {
+                    rect: ['-17px', '-17px', '87px', '87px', 'auto', 'auto'],
+                    borderRadius: ['10px', '10px', '10px', '10px'],
+                    id: 'RoundRect',
+                    stroke: [0, 'rgba(0,0,0,1)', 'none'],
+                    type: 'rect',
+                    fill: ['rgba(46,46,46,1.00)'],
+                    c: [
+                    {
+                        rect: ['28px', '17px', '29px', '38px', 'auto', 'auto'],
+                        font: ['Arial, Helvetica, sans-serif', 48, 'rgba(255,255,255,1.00)', 'normal', 'none', ''],
+                        id: 'Text',
+                        text: '2',
+                        align: 'center',
+                        type: 'text'
+                    }]
+                }
+            ],
+            symbolInstances: [
+            ]
+        },
+    states: {
+        "Base State": {
+            "${_RoundRect}": [
+                ["style", "top", '-17px'],
+                ["transform", "scaleY", '0.6'],
+                ["transform", "scaleX", '0.6'],
+                ["style", "opacity", '0'],
+                ["style", "left", '-17px'],
+                ["color", "background-color", 'rgba(46,46,46,1.00)']
+            ],
+            "${_Text}": [
+                ["style", "top", '17px'],
+                ["style", "text-align", 'center'],
+                ["color", "color", 'rgba(255,255,255,1.00)'],
+                ["style", "font-size", '48px'],
+                ["style", "left", '28px'],
+                ["style", "width", '29px']
+            ],
+            "${symbolSelector}": [
+                ["style", "height", '52px'],
+                ["style", "width", '52px']
+            ]
+        }
+    },
+    timelines: {
+        "Default Timeline": {
+            fromState: "Base State",
+            toState: "",
+            duration: 500,
+            autoPlay: false,
+            timeline: [
+                { id: "eid10", tween: [ "transform", "${_RoundRect}", "scaleY", '1', { fromValue: '0.6'}], position: 0, duration: 250 },
+                { id: "eid12", tween: [ "transform", "${_RoundRect}", "scaleY", '0.6', { fromValue: '1'}], position: 259, duration: 241 },
+                { id: "eid3", tween: [ "style", "${_RoundRect}", "opacity", '1', { fromValue: '0'}], position: 0, duration: 250 },
+                { id: "eid4", tween: [ "style", "${_RoundRect}", "opacity", '0', { fromValue: '1'}], position: 250, duration: 250 },
+                { id: "eid8", tween: [ "transform", "${_RoundRect}", "scaleX", '1', { fromValue: '0.6'}], position: 0, duration: 250 },
+                { id: "eid11", tween: [ "transform", "${_RoundRect}", "scaleX", '0.6', { fromValue: '1'}], position: 259, duration: 241 }            ]
+        }
+    }
+},
+"sym_three": {
+    version: "4.0.1",
+    minimumCompatibleVersion: "4.0.1",
+    build: "4.0.1.365",
+    baseState: "Base State",
+    scaleToFit: "none",
+    centerStage: "none",
+    initialState: "Base State",
+    gpuAccelerate: false,
+    resizeInstances: false,
+    content: {
+            dom: [
+                {
+                    rect: ['-17px', '-17px', '87px', '87px', 'auto', 'auto'],
+                    borderRadius: ['10px', '10px', '10px', '10px'],
+                    id: 'RoundRect',
+                    stroke: [0, 'rgba(0,0,0,1)', 'none'],
+                    type: 'rect',
+                    fill: ['rgba(46,46,46,1.00)'],
+                    c: [
+                    {
+                        rect: ['28px', '17px', '29px', '38px', 'auto', 'auto'],
+                        font: ['Arial, Helvetica, sans-serif', 48, 'rgba(255,255,255,1.00)', 'normal', 'none', ''],
+                        id: 'Text',
+                        text: '3',
+                        align: 'center',
+                        type: 'text'
+                    }]
+                }
+            ],
+            symbolInstances: [
+            ]
+        },
+    states: {
+        "Base State": {
+            "${_RoundRect}": [
+                ["style", "top", '-17px'],
+                ["transform", "scaleY", '0.6'],
+                ["transform", "scaleX", '0.6'],
+                ["style", "opacity", '0'],
+                ["style", "left", '-17px'],
+                ["color", "background-color", 'rgba(46,46,46,1.00)']
+            ],
+            "${_Text}": [
+                ["style", "top", '17px'],
+                ["style", "text-align", 'center'],
+                ["color", "color", 'rgba(255,255,255,1.00)'],
+                ["style", "font-size", '48px'],
+                ["style", "left", '28px'],
+                ["style", "width", '29px']
+            ],
+            "${symbolSelector}": [
+                ["style", "height", '52px'],
+                ["style", "width", '52px']
+            ]
+        }
+    },
+    timelines: {
+        "Default Timeline": {
+            fromState: "Base State",
+            toState: "",
+            duration: 500,
+            autoPlay: false,
+            timeline: [
+                { id: "eid10", tween: [ "transform", "${_RoundRect}", "scaleY", '1', { fromValue: '0.6'}], position: 0, duration: 250 },
+                { id: "eid12", tween: [ "transform", "${_RoundRect}", "scaleY", '0.6', { fromValue: '1'}], position: 259, duration: 241 },
+                { id: "eid3", tween: [ "style", "${_RoundRect}", "opacity", '1', { fromValue: '0'}], position: 0, duration: 250 },
+                { id: "eid4", tween: [ "style", "${_RoundRect}", "opacity", '0', { fromValue: '1'}], position: 250, duration: 250 },
+                { id: "eid8", tween: [ "transform", "${_RoundRect}", "scaleX", '1', { fromValue: '0.6'}], position: 0, duration: 250 },
+                { id: "eid11", tween: [ "transform", "${_RoundRect}", "scaleX", '0.6', { fromValue: '1'}], position: 259, duration: 241 }            ]
         }
     }
 }
