@@ -65,7 +65,7 @@ var app = (function($){
 
       // Instantiate Player
       var player = new HtmlContentPlayer({duration: 144, 
-                                          playableElement: _stage,
+                                          animation: _stage,
                                           audio: ['Narration.ogg', 'Narration.mp3'],
                                           poster: './images/Poster.jpg',
                                           srt: './images/Narration.srt',

@@ -26,7 +26,7 @@
 // This solves the problem.
 
 'use strict';
-(function($) {
+(function() {
 
     // Get the current path of this file. Used to load other dependent files like the player structure html.
     // In the moment when the current script is being executed, it will be the last script element in the DOM
@@ -37,7 +37,7 @@
     window.HtmlContentPlayer = function(args) {
 
         var defaults = {
-            playableElement: null, // animation's stage (required)
+            animation: null, // animation's stage (required)
             duration: null,        // in seconds (required)
             audio: null,
             elem: null,
@@ -64,8 +64,8 @@
             throw(': Please set the htmlcontentplayer\'s "duration" property manually to the length of the audio track in seconds');
         }
 
-        if (!_options.playableElement) {
-            throw(': Please set the htmlcontentplayer\'s "playableElement" property to the animation\'s stage');
+        if (!_options.animation) {
+            throw(': Please set the htmlcontentplayer\'s "animation" property to the animation\'s stage');
         }
 
         // Cache frequently used elements
@@ -82,7 +82,7 @@
         var _volThumb;
 
         // Useful member variables
-        var _stage = _options.playableElement;
+        var _stage = _options.animation;
         var _stageElem = _stage.getSymbolElement() || $(_options.elem) || $('#Stage');
         var _isPlaying = false;
         var _isMuted = false;
@@ -1125,7 +1125,7 @@
                 var bodyWidth = $(window).width();
                 var bodyHeight = $(window).height() - $('.player-controls').height();
 
-                var scale = Math.min(bodyWidth/_stageElem.width(), bodyHeight/_stageElem.height());
+                var scale = Math.min(bodyWidth/_stageElem.width(), bodyHeight/_stageElem.height()) + 0.005;
                 scaleElem(_stageElem, scale);
 
                 _stageElem.css('left', (bodyWidth - _stageElem.width()*scale)/2);
@@ -1192,49 +1192,6 @@
 
             setTimeSliderWidth();
         }
-
-        // function fitIntoWindow() {
-
-        //     if (_isFullscreen) {
-        //         return;
-        //     }
-
-        //     var winWidth = $(window).innerWidth();
-        //     var winHeight = $(window).innerHeight();
-
-        //     if (winWidth > _baseContentWidth) {
-        //         return;
-        //     }
-
-        //     // Using "+ 2" on the window's size since the player-content
-        //     // element has a -1px margin all around. Somewhat brittle.
-        //     var w = Math.min(winWidth + 2, _baseContentWidth);
-        //     var h = Math.min(winHeight + 2, _baseContentHeight);
-        //     var wScale = w/_baseContentWidth;
-        //     var hScale = h/_baseContentHeight;
-
-        //     if (winWidth < winHeight || winHeight < _baseContentHeight) { // portrait
-        //         scaleElem(_playerContent, wScale);
-        //         _playerContent.height(_baseContentHeight * wScale);
-        //         _playerContent.width(_baseContentWidth * wScale);
-        //         _playerContent.css('margin-left', 0);
-        //     }
-        //     else { // landscape
-        //         scaleElem(_playerContent, hScale);
-        //         _playerContent.height(_baseContentHeight * hScale);
-        //         _playerContent.width(_baseContentWidth * wScale);
-        //         _playerContent.css('margin-left', (winWidth - _stageElem.width()*hScale)/2);
-        //     }
-
-        //     if (wScale < 1) {
-        //         $('.player-fullscreen-button').hide();
-        //     }
-        //     else {
-        //         $('.player-fullscreen-button').show();
-        //     }
-
-        //     setTimeSliderWidth();
-        // }
 
         function setTimeSliderWidth() {
 
@@ -1415,4 +1372,4 @@
 
     };
 
-})(jQuery);
+})();

@@ -1,5 +1,5 @@
 'use strict';
-(function($) {
+(function() {
 
     window.Subtitles = function(srt) {
 
@@ -130,4 +130,4 @@
         this.getSubtitle = getSubtitle;
     };
 
-})(jQuery);
+})();

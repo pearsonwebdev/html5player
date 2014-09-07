@@ -6,10 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
 	<title>Untitled</title>
 
-    <script src="./edge_includes/jquery-2.0.3.min.js"></script>
-
-    <!-- HTML5 Player Styles and Code ............ -->
-    <link href="../../release/html-content-player.min.css" rel="stylesheet" type="text/css" />
+  <!-- HTML5 Player Styles and Code ............ -->
+    <link href="../../release/html-content-player.min.css" rel="stylesheet" />
     <script src="../../release/html-content-player.min.js"></script>
 
 <!--Adobe Edge Runtime-->
@@ -17,6 +15,7 @@
     <script type="text/javascript" charset="utf-8" src="width-test_edgePreload.js"></script>
     <style>
         .edgeLoad-EDGE-342396983 { visibility:hidden; }
+        .player-container { max-width: 800px; }
         .text {
           margin: 20px;
           max-width: 638px;
@@ -44,17 +43,17 @@
 
 
     <script>
-      (function($){
+      (function(){
 
         AdobeEdge.bootstrapCallback(function (compId) {
           var stage = AdobeEdge.getComposition(compId).getStage();
           var player = new HtmlContentPlayer({duration: 4, 
-                                              playableElement: stage,
+                                              animation: stage,
                                               showTime: true,
                                               srt: 'narration.srt'});
         });
 
-      })(jQuery);
-  </script>
+      })();
+    </script>
 </body>
 </html>

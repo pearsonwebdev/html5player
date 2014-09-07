@@ -51,7 +51,7 @@ if(document.addEventListener ){
 
    aLoader = [
       { load: "edge_includes/jquery-2.0.3.min.js"},
-      { load: "edge_includes/edge.4.0.0.min.js"},
+      { load: "edge_includes/edge.4.0.1.min.js"},
       { load: "hydroelectric_edge.js"},
       { load: "hydroelectric_edgeActions.js"}];
 
@@ -59,7 +59,7 @@ if (AdobeEdge.bootstrapLoading) { signaledLoading = true; AdobeEdge.loadResource
 
 loadResources(aLoader, doDelayLoad);
 
-var plSTF="none",ctrPlS="none",minPlW="0",maxPlW="640px",plWidth="638px",plHeight="478px";
+var plSTF="none",ctrPlS="none",minPlW="0",maxPlW="640px",plWidth="640px",plHeight="480px";
 
 preContent={dom: [ ]};//simpleContent
 

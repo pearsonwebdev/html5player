@@ -56,7 +56,7 @@
           var stage = AdobeEdge.getComposition(compId).getStage();
 
           var player = new HtmlContentPlayer({duration: 30, 
-                                              playableElement: stage,
+                                              animation: stage,
                                               audio: ['Narration.ogg', 'Narration.mp3'],
                                               showTime: true,
                                               hideCCButton: true});

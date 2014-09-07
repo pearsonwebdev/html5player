@@ -44,29 +44,25 @@
           <a class="internal-link" name="Overview"></a>
           <h3>Overview</h3>
 
-          <p>The HTML5 content player is a jQuery UI widget that allows for the control of a javascript animation.  It works well with animations created with Adobe Edge Animate (Edge), but can control any javascript animation class that supports a few basic methods such as play() and stop().  More on the specific methods further down in the documentation.</p>
+          <p>The HTML5 content player allows for the control of a javascript animation.  It works well with animations created with Adobe Edge Animate (Edge), but should be able to control any javascript animation that supports a few basic methods such as play() and stop().  More on the specific methods further down in the documentation.</p>
 
-          <p>The player synchronises playback between an audio track and an animation.  It also supports closed captioning through srt files.  These topics and more are covered in this documentation.</p>
+          <p>When audio is present, the player synchronises playback between an audio track and an animation.  It also supports closed captioning through srt files.  These topics and more are covered in this documentation.</p>
           <br>
           <a class="internal-link" name="Setup"></a> 
           <h3>Setup</h3>
 
-          <p>In most cases you will start with the pre-built template page, but below walks through the setup of the player on a any page.</p>
+          <p>In some cases you will start with the pre-built template page, but below walks through the setup of the player on a any page.</p>
 
           <h4>Including Files</h4>
 
           <pre>
             <code data-language="html">
-  <!-- JQuery and JQuery UI required -->
-  <script src="vendor/jquery.min.js"></script>
-  <script src="vendor/jquery-ui.min.js"></script>
-
   <!-- HTML 5 Content player includes --> 
-  <link rel="stylesheet" href="/path/to/mediaplayer/html-content-player.css" />
-  <script src="/path/to/mediaplayer/html-content-player.js"></script></code>
+  <link href="/path/to/player/html-content-player.min.css" rel="stylesheet" />
+  <script src="/path/to/player/html-content-player.min.js"></script></code>
           </pre>
 
-          <p>First load JQuery and JQuery UI.  For speed, its usually best to load those from Google's servers since most users will then have them cached in their browsers. Then it is necessary to include two files into your HTML page.  One is the CSS file with all of the player's styles and the other is the Javascript file containing the player code.</p>
+          <p>Include these two files on your page. The player requires jquery, which Adobe Edge Animate loads for us.  JQuery is ready by the time we initialize the player below.</p>
 
           <p>To get the best experience in Adobe Edge Animate, either pull the media player files in from a web location or place a copy of the files in the animation's directory and point to those files.  Copying like this is not ideal, since there will be many copies of the files on Pearson's servers, leading to a maintenance nightmare. So consider only doing this during the authoring phase.</p>
 
@@ -75,36 +71,30 @@
 
           <pre>
             <code data-language="html">
-  <div id="player-base">
-    <audio id="narration" audio preload="auto" autobuffer>
-      <source src="images/Narration.ogg" type="audio/ogg"/>
-      <source src="images/Narration.mp3" type="audio/mpeg"/>
-    </audio>
-    <div id="Stage" class="EDGE-21481972 animation"></div>
+  <div class="player-container">
+    <div id="Stage" class="EDGE-21481972"></div>
   </div></code>
           </pre>
 
-          <p>A div with an id of <em>#player-base</em> is required and is the primary element that the jQuery UI player gets attached to.  Inside of the <em>#player-base</em> we create an audio element with an id of <em>#narration</em> and a div with a class of <em>.animation</em>. All of these class names and ids are necessary for the player to function.</p>
+          <p>Wrap the Stage's element in a div with the class <em>player-container</em></p>
 
-          <p>What you see above is typical for our animations that were created in Adobe Edge Animate.  Edge has a primary div that contains all of the animation, they give that div an id of <em>#Stage</em>.  One of it's class names is the stage's unique identifier which above is <em>.EDGE-21481972</em>.  Your stage will have a different ID, see the HTML page that Edge produces for your ID.  These Edge specific constructs are not required for the player, but round out the setup for Edge animations.</p>
-
-          <p class="important"><em>IMPORTANT:</em>  As of this writing, Firefox has an issue seeking to the correct time in mp3 files.  Their mp3 support is fairly new.  Therefore, in the code above, we are specifying the ogg file first.  This will force Firefox to use the ogg file and not have this issue.  Please monitor the following bug.  When it is fixed, the mp3 should go first: <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=994561">https://bugzilla.mozilla.org/show_bug.cgi?id=994561</a></p>
+          <p>What you see above is typical for animations created in Adobe Edge Animate.  Edge has a primary div that will contain all of the animation content, they give that div an id of <em>#Stage</em>.  One of it's class names is the stage's unique identifier which above is <em>.EDGE-21481972</em>.  Your stage will have a different ID, see the HTML page that Edge produces for your ID.  These Edge specific constructs are not required for the player, but round out the setup for Edge animations.</p>
 
           <h4>Instantiation</h4>
 
           <pre>
             <code data-language="html">
-      <script>
-        (function($){
+    <script>
+      (function(){
 
-          AdobeEdge.bootstrapCallback(function (compId) {
-            var stage = AdobeEdge.getComposition(compId).getStage();
-            $('#player-base').htmlcontentplayer({ duration: 125, 
-                                                  playableElement: stage });
-          });
+        AdobeEdge.bootstrapCallback(function (compId) {
+          var stage = AdobeEdge.getComposition(compId).getStage();
+          var player = new HtmlContentPlayer({duration: 4, 
+                                              animation: stage});
+        });
 
-        })(jQuery);
-      </script></code>
+      })();
+    </script></code>
           </pre>
 
           <p>The code above can be located in many places, for simplicity we're placing it inside of a &lt;script&gt; tag after the HTML markup described above.</p>
@@ -113,29 +103,28 @@
 
           <p>Inside of there, we are getting access to the animation's stage object.  This stage contains the functions to play and stop the animation.</p> 
 
-          <p>Now here's were the magic happens.  The htmlcontentplayer gets attached to the <em>#player-base</em> div and we specify some options.  The two options you see here are required and they are <em>duration</em> (in seconds) and <em>playableElement</em> which is an object that supports some basic methods such as play() and stop().</p>
+          <p>Now here's were the magic happens. We initialize a new instance of the HtmlContentPlayer class, provide it with a <em>duration</em> and assign the stage to our <em>animation</em> property. The <em>duration</em> and <em>animation</em> properties are required.</p>
 
           <h4>Instantiation Options</h4>
 
           <pre>
             <code data-language="javascript">
-  $('#player-base').htmlcontentplayer({duration: 128, 
-                                       playableElement: stage,
-                                       srt:'./images/Narration.srt',
-                                       poster: './images/poster.jpg',
-                                       autoPlay: false, 
-                                       showControls: true,
-                                       showTime: false,
-                                       mute: false,
-                                       triggerOnSync: false,
-                                       hidePrevButton: false,
-                                       hideNextButton: false,
-                                       hideVolButton: false,
-                                       hideCCButton: false,
-                                       hideFullScreenButton: false,
-                                       isAdobeEdge: true, // true is default
-                                       played: function(e, time) { },
-                                       paused: function(e, time) { } });</code>
+  var player = new HtmlContentPlayer({duration: 128, 
+                                      animation: stage,
+                                      audio: ['Narration.ogg', 'Narration.mp3'],
+                                      srt:'./images/Narration.srt',
+                                      poster: './images/poster.jpg',
+                                      autoPlay: false, 
+                                      showControls: true,
+                                      showTime: false,
+                                      mute: false,
+                                      triggerOnSync: false,
+                                      hidePrevButton: false,
+                                      hideNextButton: false,
+                                      hideVolButton: false,
+                                      hideCCButton: false,
+                                      hideFullScreenButton: false,
+                                      isAdobeEdge: true, // true is default});</code>
           </pre>
 
           <p>For a full description of these options see <a href="#Properties">player properties</a> below in the API reference.  Please note that <em>autoPlay</em> should never be true in a production environment.  It is strictly a development property.  Accessibility guidelines says that it is a no-no, and iOS has significant issues in supporting autoplaying audio through HTML or Javascript.</p>
@@ -167,18 +156,20 @@
           
           <pre>
             <code data-language="javascript">
-  var _stage;
+  var stage;
 
   AdobeEdge.bootstrapCallback(function (compId) {
 
-    _stage = AdobeEdge.getComposition(compId).getStage();
+    stage = AdobeEdge.getComposition(compId).getStage();
 
     // Instantiate Player
-    $('#player-base').htmlcontentplayer({duration: 220,
-                                         playableElement: _stage,
-                                         triggerOnSync: false,
-                                         played: playerPlayed,
-                                         paused: playerPaused});
+    var player = new HtmlContentPlayer({duration: 220,
+                                      animation: stage,
+                                      audio: ['Narration.ogg', 'Narration.mp3'],
+                                      triggerOnSync: false}); //see below
+    // Listen to player events
+    player.on('played', playerPlayed);
+    player.on('paused', playerPaused);
   });
 
   // ---------------------------------------------------
@@ -186,19 +177,21 @@
   // ---------------------------------------------------
 
   function playerPlayed(e, time) {
-    var mySymbol = _stage.getSymbol('MySymbol');
+    var mySymbol = stage.getSymbol('MySymbol');
     if (mySymbol.getSymbolElement().is(':visible')) {
       mySymbol.play();
     }
   }
 
   function playerPaused(e, time) {
-    var mySymbol = _stage.getSymbol('MySymbol');
+    var mySymbol = stage.getSymbol('MySymbol');
     mySymbol.stop();
   }</code>
           </pre>
 
-          <p>Other use cases involving these types of events, outside of symbol looping, can often be resolved by some manual work in the player’s “played” and “paused” event handlers, like above.  As you can see in “playerPlayed” and “playerPaused”, you also have access to the time in ms.</p>
+          <p>We are initializing the player, making sure to set <em>triggerOnSync</em> to false if our animation has audio.  This property stops the player from triggering the <em>played</em> and <em>paused</em> events during its re-syncing of the audio/animation.  After initialization we are listening to the <em>played</em> and <em>paused</em> events, and handling those events in two functions.</p>
+
+          <p>Other use cases involving these types of events, outside of symbol looping, can often be resolved by some manual work in the player’s <em>played</em> and <em>paused</em> event handlers, like above.  As you can see in <em>playerPlayed</em> and <em>playerPaused</em>, you also have access to the time in ms.</p>
 
 
           <br>
@@ -206,22 +199,16 @@
           <a class="internal-link" name="Audio"></a> 
           <h3>Audio Support</h3>
 
-          <p>The player does not work without an audio track.  The audio track provides a timeline that the animation is periodically sync'd to.  To cover all browsers you will need 2 audio files, one is an .mp3, the other an .ogg (Ogg Vorbis).  The player uses the HTML5 &lt;audio&gt; tag and we saw this setup earlier in the document:</p>
+          <p>The player can work with and without an audio track.  When audio is present, the audio track provides a timeline that the animation is periodically sync'd to.  To cover all browsers you will need 2 audio files, one is an .mp3, the other an .ogg (Ogg Vorbis).</p>
 
-          <h4>HTML Structure</h4>
+          <h4>Including Audio</h4>
 
           <pre>
-            <code data-language="html">
-  <div id="player-base">
-    <audio id="narration" audio preload="auto" autobuffer>
-      <source src="images/Narration.mp3" type="audio/mpeg"/>
-      <source src="images/Narration.ogg" type="audio/ogg"/>
-    </audio>
-    <div id="Stage" class="EDGE-21481972 animation"></div>
-  </div></code>
+            <code data-language="javascript">
+  var player = new HtmlContentPlayer({duration: 220,
+                                    animation: stage,
+                                    audio: ['Narration.ogg', 'Narration.mp3']});</code>
           </pre>
-
-          <p>There are many ways to produce mp3 and ogg files, we typically export a wav file from our audio application and then use the command-line tool FFMPEG to encode the mp3 and ogg.  FFMPEG can be challenging to install with all of the codecs that are need, but once installed is simple to use.</p>
 
           <br>
           <a class="internal-link" name="CC"></a> 
@@ -273,10 +260,10 @@
 
           <pre>
             <code data-language="javascript">
-  $('#player-base').htmlcontentplayer({duration: 128, 
-                                       playableElement: stage,
-                                       srt:'./images/Narration.srt'
-                                       });</code>
+  var player = new HtmlContentPlayer({duration: 220,
+                                    animation: stage,
+                                    srt:'./images/Narration.srt',
+                                    audio: ['Narration.ogg', 'Narration.mp3']});</code>
           </pre>
 
           <br>
@@ -290,10 +277,9 @@
           <h4>Including poster image</h4>
           <pre>
             <code data-language="javascript">
-  $('#player-base').htmlcontentplayer({duration: 128, 
-                                       playableElement: stage,
-                                       poster:'./images/Poster.jpg'
-                                       });</code>
+  var player = new HtmlContentPlayer({duration: 220,
+                                    animation: stage,
+                                    poster:'./images/Poster.jpg'});</code>
           </pre>
 
           <br>
@@ -342,7 +328,7 @@
           <p>All of our efforts to date have made use of Adobe Edge Animate as the primary authoring tool for creating animations.  The content player has been significantly tested in this environment.  However, the player was designed to work with any HTML content or Javascript animation/presentation as long as it supports some basic methods.</p>
 
           <div class="emphasis">
-            <h5>The <em>playableElement</em> property is expecting an object<br>that has the following public methods:</h5>
+            <h5>The <em>animation</em> property is expecting an object<br>that has the following public methods:</h5>
             <ul>
               <li><em>play()</em> - start animation from current time.  If the animation was stopped, then the assumption is that the current time is the time it was stopped.</li><br>
               <li><em>play(time)</em> - start the animation from a specified time.</li><br>
@@ -367,7 +353,9 @@
             <ul class="bullet-free">
               <li><b>duration</b> <i>(required)</i><br>The length of time, in seconds of the audio file and animation</li>
 
-              <li><b>playableElement</b> <i>(required)</i><br>A Javascript object that contains the basic play/stop methods.</li>
+              <li><b>animation</b> <i>(required)</i><br>A Javascript object that contains the basic play/stop methods.</li>
+
+              <li><b>audio</b><br>An array of audio files, one is an .mp3, the other is an .ogg</li>
 
               <li><b>srt</b><br>A subtitle file required for closed captioning</li>
 
@@ -381,7 +369,7 @@
 
               <li><b>mute</b> <i>(only for use during authoring)</i><br>Allows the audio to be muted by default.</li>
 
-              <li><b>triggerOnSync</b><br>In some situations it is desirable to not have the player trigger <em>played</em> and <em>paused</em> events when it performs its syncing between the audio and animation.  In these cases, set <em>triggerOnSyc</em> to false. </li>
+              <li><b>triggerOnSync</b><br>In some situations it is desirable to not have the player trigger <em>played</em> and <em>paused</em> events when it performs its syncing between the audio and animation.  In these cases, set <em>triggerOnSync</em> to false. </li>
               
               <li><b>hidePrevButton</b><br>Hides the <em>Previous</em> button from showing in the controls section of the player. Some animations are short. Therefore hiding some of the buttons is desirable.</li>
 
@@ -400,22 +388,21 @@
           <br>
           <pre>
             <code data-language="javascript">
-  $('#player-base').htmlcontentplayer({duration: 128, 
-                                       playableElement: stage,
-                                       srt:'./images/Narration.srt',
-                                       poster: './images/poster.jpg',
-                                       autoPlay: false, 
-                                       showControls: true,
-                                       showTime: false,
-                                       mute: false,
-                                       triggerOnSync: false,
-                                       hidePrevButton: false,
-                                       hideNextButton: false,
-                                       hideVolButton: false,
-                                       hideCCButton: false,
-                                       hideFullScreenButton: false,
-                                       played: function(e, time) { },
-                                       paused: function(e, time) { } });</code>
+  var player = new HtmlContentPlayer({duration: 220, 
+                                     animation: stage,
+                                     audio: ['Narration.ogg', 'Narration.mp3'],
+                                     srt:'./images/Narration.srt',
+                                     poster: './images/poster.jpg',
+                                     autoPlay: false, 
+                                     showControls: true,
+                                     showTime: false,
+                                     mute: false,
+                                     triggerOnSync: false,
+                                     hidePrevButton: false,
+                                     hideNextButton: false,
+                                     hideVolButton: false,
+                                     hideCCButton: false,
+                                     hideFullScreenButton: false});</code>
           </pre>
 
           <br>
@@ -433,17 +420,6 @@
               <li><b>stop()</b><br>Stops/pauses the player at the current time.</li>
             </ul>
           </div>
-
-          <br>
-          <h4>Accessing the Player and Calling Methods:</h4>
-
-          <pre>
-            <code data-language="javascript">
-  var htmlContentPlayer = 
-    $('#player-base').htmlcontentplayer().data('htmlcontentplayer');
-
-  htmlContentPlayer.stop();</code>
-          </pre>
 
           <br>
           <a class="internal-link" name="Events"></a> 
