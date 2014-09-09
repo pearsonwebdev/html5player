@@ -217,11 +217,14 @@
                     _safariTimeSliderDiff = 42;
                 }
 
-                // Start our Safari audioFix kludge
+                // Start our Safari audioFix kludge (ios 6 and earlier)
                 if (navigator.vendor && navigator.vendor.match(/Apple/i)) {
-                    playAudio();
-                    pauseAudio();
-                    _useAudioKludge = true;
+                    if (Number(navigator.userAgent.match(/Version\/(\d)\..*/)[1]) < 7) {
+                        console.log("ios6")
+                        playAudio();
+                        pauseAudio();
+                        _useAudioKludge = true;
+                    }
                 }
 
                 // use kludge on Windows Vista IE9 
@@ -320,8 +323,8 @@
                 // that real video uses. Every so often the player will sync the video to the
                 // audio's current time. Real video stores a keyframe value that says how many
                 // frames are between these syncs. We are using a set value of 40, which works
-                // out to arround 7 secs on most browsers.
-                if (_keyframeElapsed > 40) {
+                // out to around 7 secs on most browsers.
+                if (_keyframeElapsed > 40 || _keyframeElapsed === -1) {
 
                     if (_isPlaying) {
                         playFromTime(currentTime * 1000);
@@ -430,11 +433,18 @@
                 _playEnded = false;
             }
 
+            _keyframeElapsed = -1;
+
             $('.player-poster').hide();
             _isPlaying = true;
-            playFromTime();
+
+            if (!_options.audio) {
+                playFromTime();
+            }
+
             playAudio();
             trigger('played', null, null);
+
             _playButton.addClass('paused');
             _playButton.html('Pause');
         }
