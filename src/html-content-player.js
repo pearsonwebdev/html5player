@@ -198,7 +198,7 @@
             _playerContent.append(_stageElem);
             _playerBase.unwrap();
 
-            _baseContentHeight = _playerContent.height() ;
+            _baseContentHeight = _playerContent.height();
             _baseContentWidth = _playerContent.width();
 
             // If audio is present, initialize it and perform other audio-related setup
@@ -220,7 +220,6 @@
                 // Start our Safari audioFix kludge (ios 6 and earlier)
                 if (navigator.vendor && navigator.vendor.match(/Apple/i)) {
                     if (Number(navigator.userAgent.match(/Version\/(\d)\..*/)[1]) < 7) {
-                        console.log("ios6")
                         playAudio();
                         pauseAudio();
                         _useAudioKludge = true;
@@ -245,7 +244,7 @@
 
 
             // detect iOS
-            if(navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)) {
+            if (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/iPad/i)) {
                 $('.player-inner').addClass('ios');
                 $('.player-vol-button').remove();
             }
@@ -260,11 +259,6 @@
             _timeThumb.attr('aria-valuemin', 0);
             _timeThumb.attr('aria-valuemax', _options.duration);
             _volThumb.attr('aria-valuenow', 75);
-
-            // If the player is started on a mobile device, scale things down
-            if (!_options.fullScreen) {
-                fitIntoWindow();
-            }
 
             // Set inital states using arguments ----
 
@@ -294,7 +288,9 @@
 
             if (_options.fullScreen) {
                 goFullscreen();
-                windowResized();
+            }
+            else {
+                fitIntoWindow();
             }
 
             //hide loading spinner
@@ -1063,11 +1059,6 @@
 
             _subtitles.hide();
 
-            var bodyWidth = $(window).width();
-            var bodyHeight = $(window).height() - $('.player-controls').height();
-
-            var scale = Math.min(bodyWidth/_stageElem.width(), bodyHeight/_stageElem.height());
-
             _playerBase.addClass('no-shadow');
             $('.player-inner').appendTo('body');
             $('.player-inner').addClass('fullscreen');
@@ -1081,16 +1072,13 @@
                 _subtitles.show();
             }
 
-            scaleElem(_stageElem, scale);
-            _stageElem.css('left',(bodyWidth - _stageElem.width()*scale)/2);
+            _isFullscreen = true;
 
-            setTimeSliderWidth();
+            fitIntoWindow();
 
             if(showFocus) {
                 $('.player-fullscreen-button').focus();
             }
-
-            _isFullscreen = true;
             trigger('maximizeComplete', null, null);
         }
 
@@ -1107,17 +1095,10 @@
             _playerBase.removeClass('no-shadow');
             _playerBase.css('opacity', 1);
 
-            _stageElem.css('left',0);
-
-            var scale = _stageElem.width()/_playerContent.width();
-            scaleElem(_stageElem, scale);
-
             _subtitles.removeClass('fullscreen');
 
             if (_showSubtitles)
                 _subtitles.show();
-
-            setTimeSliderWidth();
 
             _isFullscreen = false;
 
@@ -1131,74 +1112,73 @@
         }
 
         function windowResized() {
-            if (_isFullscreen) {
-                var bodyWidth = $(window).width();
-                var bodyHeight = $(window).height() - $('.player-controls').height();
-
-                var scale = Math.min(bodyWidth/_stageElem.width(), bodyHeight/_stageElem.height()) + 0.005;
-                scaleElem(_stageElem, scale);
-
-                _stageElem.css('left', (bodyWidth - _stageElem.width()*scale)/2);
-
-                setTimeSliderWidth();
-
-                // Notify the outside world. Send the scaled stage dimensions.
-                // Currently used by the iframe in the Habitat CMS environment.
-                trigger('windowResized', null, {
-                    stageWidth: _stageElem.width() * scale,
-                    stageHeight: _stageElem.height() * scale,
-                    controlsWidth: _playerControls.width(),
-                    controlsHeight: _playerControls.height(),
-                });
-            }
-            else {
-                fitIntoWindow();
-            }
+            fitIntoWindow();
         }
 
         // -- Helpers --------------------------------------- 
 
         function fitIntoWindow() {
 
-            if (_isFullscreen) {
-                return;
-            }
-
             var winWidth = $(window).innerWidth();
             var winHeight = $(window).innerHeight();
+            var w;
+            var h;
+            var wScale;
+            var hScale;
+            var contentScale;
 
-            // Using "+ 2" on the window's size since the player-content
-            // element has a -1px margin all around. Somewhat brittle.
-            var w = Math.min(winWidth + 2, _baseContentWidth);
-            var h = Math.min(winHeight + 6 - $('.player-controls').height(), _baseContentHeight);
-            var wScale = w/_baseContentWidth;
-            var hScale = h/_baseContentHeight;
+            // Scale and Set dimensions -------
 
-            var contentScale = Math.min(wScale, hScale);
+            if (_isFullscreen) {
 
-            scaleElem(_playerContent, contentScale);
-            _playerContent.height(_baseContentHeight * contentScale);
-            _playerContent.width(_baseContentWidth * wScale);
+                w = Math.min(winWidth);
+                h = Math.min(winHeight + 6 - _playerControls.height());
+                wScale = w/_baseContentWidth;
+                hScale = h/_baseContentHeight;
+
+                contentScale = Math.min(wScale, hScale) + 0.005;
+
+                scaleElem(_playerContent, contentScale);
+
+                _playerContent.css('width', '');
+                $('.player-inner').css('width', '');
+            }
+            else {
+
+                w = Math.min(winWidth + 2, _baseContentWidth);
+                h = Math.min(winHeight + 6 - _playerControls.height(), _baseContentHeight);
+                wScale = w/_baseContentWidth;
+                hScale = h/_baseContentHeight;
+
+                contentScale = Math.min(wScale, hScale);
+
+                scaleElem(_playerContent, contentScale);
+
+                _playerContent.height(_baseContentHeight * contentScale);
+                _playerContent.width(_baseContentWidth * wScale);
+                $('.player-inner').width(_baseContentWidth * wScale);
+
+                // Hide Fullscreen button if the width takes up the window width
+                if (wScale < 1) {
+                    $('.player-fullscreen-button').hide();
+                }
+                else {
+                    $('.player-fullscreen-button').show();
+                }
+            }
+
+            // Center the animation -------------
 
             if (winWidth < _baseContentWidth){
                 _playerContent.css('margin-left', (winWidth - (_baseContentWidth * contentScale))/2);
                 _playerContent.css('margin-right', -(winWidth - (_baseContentWidth * contentScale))/2);
             }
-            else if (contentScale < 1) {
-                _playerContent.css('margin-left', (_playerBase.width() - (_baseContentWidth * contentScale))/2);
-                _playerContent.css('margin-right', -(_playerBase.width() - (_baseContentWidth * contentScale))/2);
-            }
-            else {
-                _playerContent.css('margin-left', 0);
-                _playerContent.css('margin-right', 0);
+            else  {
+                _playerContent.css('margin-left', ($('.player-inner').width() - (_baseContentWidth * contentScale))/2);
+                _playerContent.css('margin-right', -($('.player-inner').width() - (_baseContentWidth * contentScale))/2);
             }
             
-            if (wScale < 1) {
-                $('.player-fullscreen-button').hide();
-            }
-            else {
-                $('.player-fullscreen-button').show();
-            }
+            // Layout the controls -------------
 
             setTimeSliderWidth();
         }
