@@ -100,6 +100,7 @@
         var _baseContentHeight;
         var _baseContentWidth;
         var _parseSRT;
+        var _keyframeMax = 20; // Constant, this is the number of ticks between audio/animation sync
 
         // Load SRT file, if available
         if (_options.srt) {
@@ -320,7 +321,7 @@
                 // audio's current time. Real video stores a keyframe value that says how many
                 // frames are between these syncs. We are using a set value of 40, which works
                 // out to around 7 secs on most browsers.
-                if (_keyframeElapsed > 40 || _keyframeElapsed === -1) {
+                if (_keyframeElapsed > _keyframeMax || _keyframeElapsed === -1) {
 
                     if (_isPlaying) {
                         playFromTime(currentTime * 1000);
@@ -383,6 +384,12 @@
 
             // Update progress bar position
             _progressBar.width(percentage * 100 + '%');
+
+            // On some platforms, setting the animation to the same time as the audio
+            // still leaves the two a little out of sync. To help with that we are setting
+            // keyframeElapsed to almost its maximum value (keyframeMax). When keyframeElapsed
+            // hits keyframeMax, the audio and animation sync.
+            _keyframeElapsed = _keyframeMax - 2;
 
             if (_options.audio) {
                 // Change the audio track's current time. Safari needs a
@@ -1140,6 +1147,7 @@
 
                 scaleElem(_playerContent, contentScale);
 
+                // Clear any hardwired widths
                 _playerContent.css('width', '');
                 $('.player-inner').css('width', '');
             }
@@ -1154,6 +1162,7 @@
 
                 scaleElem(_playerContent, contentScale);
 
+                // Elements' bounding boxes don't automatically resize when scaled, do that now
                 _playerContent.height(_baseContentHeight * contentScale);
                 _playerContent.width(_baseContentWidth * wScale);
                 $('.player-inner').width(_baseContentWidth * wScale);
