@@ -64,6 +64,30 @@ module.exports = function(grunt) {
             '<%= releaseDir %>/html-content-player.min.css': ['<%= srcDir %>/html-content-player.css'],
         },
 
+        // Concatenate the Player Structure into the JS as a string
+        // Our Player html is stored in "html-content-player-structure.html" for editing, but we 
+        // have the task below that converts that external file into a javascript string and 
+        // concatenates with the "html-content-player.js" file. This string is then accessible
+        // to the player for appending to the DOM. This allows us the flexibilty to view and edit
+        // the html structure in a separate file, but have the benefits of having it included in the 
+        // final js during actual usage.
+        concat: {
+            options: {
+                process: function(src, filepath) {
+
+                    if (filepath.indexOf('html-content-player-structure') !== -1) {
+                        return "window.HtmlContentPlayer.structure = '" + src.replace(/\s{2,}|<!--.*\n|\n/g, '') + "';";
+                    }
+
+                    return src;
+                },
+            },
+            dist: {
+                src: ['<%= srcDir %>/html-content-player.js', '<%= srcDir %>/html-content-player-structure.html'],
+                dest: '<%= releaseDir %>/html-content-player-intermediate.js'
+            },
+        },
+
         // Minify Javascript files
         uglify: {
             js: {
@@ -74,7 +98,7 @@ module.exports = function(grunt) {
                     //beautify: true
                 },
                 files: {
-                    '<%= releaseDir %>/html-content-player.min.js': ['<%= srcDir %>/html-content-player.js', '<%= srcDir %>/parseSRT.js']
+                    '<%= releaseDir %>/html-content-player.min.js': ['<%= releaseDir %>/html-content-player-intermediate.js', '<%= srcDir %>/parseSRT.js']
                 }
             }
         },
@@ -121,7 +145,7 @@ module.exports = function(grunt) {
                     '<%= srcDir %>/html-content-player.js',
                     '<%= srcDir %>/parseSRT.js'
                 ],
-                tasks: ['uglify:js']
+                tasks: ['concat', 'uglify:js', 'clean']
             },
             images: {
                 files: [
@@ -134,7 +158,7 @@ module.exports = function(grunt) {
                 files: [
                     '<%= srcDir %>/*.html'
                 ],
-                tasks: ['copy:markup']
+                tasks: ['concat', 'uglify:js', 'clean']
             }
         },
 
@@ -144,12 +168,16 @@ module.exports = function(grunt) {
             }
         },
 
+        // delete the intermediate file that was created in the concat task
+        clean: ['<%= releaseDir %>/html-content-player-intermediate.js']
+
     });
 
     // Load the plugins
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');

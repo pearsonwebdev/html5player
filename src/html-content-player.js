@@ -112,37 +112,48 @@
 
 
         function appendTemplate() {
-            // Load the html template and build the player DOM
-            $.get(_jsPath + 'html-content-player-structure.html', function(template) {
 
-                _stageElem.wrap('<div class="temp-wrapper"></div>');
-                _stageElem.parent().append(template);
+            // Our Player html is stored in "html-content-player-structure.html" for editing, but we have a task
+            // in Gruntfile.js that converts that external file into a javascript string and concatenates with the 
+            // file you're looking at right now. This happens at build-time when you run "grunt start" and anytime
+            // one of the src files changes while the server is running. The player structure string gets assigned 
+            // to window.HtmlContentPlayer.structure in the final minified file. Below we are appending that to
+            // the stage element's parent.
+            _stageElem.wrap('<div class="temp-wrapper"></div>');
+            _stageElem.parent().append(window.HtmlContentPlayer.structure);
 
-                // Check if Stage has "Responsive Scaling" set
-                if (_stage.options.data.scaleToFit !== undefined && _stage.options.data.scaleToFit !== 'none') {
-                    _stageElem.hide();
-                    $('#player-base').addClass('no-spin');
-                    $('.player-alert').html('Your stage has "Responsive Scaling" set, please disable that option in Edge Animate.').show();
-                    return;
-                }
+            // Cache the base elements
+            _playerBase = $('#player-base');
+            _playerContent = $('.player-content');
 
-                // Check if Stage has "Center Stage" set
-                if (_stage.options.data.centerStage !== undefined && _stage.options.data.centerStage !== 'none') {
-                    _stageElem.hide();
-                    $('#player-base').addClass('no-spin');
-                    $('.player-alert').html('Your stage has the "Center Stage" option set, please disable that option in Edge Animate.').show();
-                    return;
-                }
-                layoutReady();
+            // Reparent the animation div
+            _playerContent.append(_stageElem);
+            _playerBase.unwrap();
 
-                trigger('playerDOMReady', null);
-            });
+            // Check if Stage has "Responsive Scaling" set
+            if (_stage.options.data.scaleToFit !== undefined && _stage.options.data.scaleToFit !== 'none') {
+                _stageElem.hide();
+                $('#player-base').addClass('no-spin');
+                $('.player-alert').html('Your stage has "Responsive Scaling" set, please disable that option in Edge Animate.').show();
+                return;
+            }
+
+            // Check if Stage has "Center Stage" set
+            if (_stage.options.data.centerStage !== undefined && _stage.options.data.centerStage !== 'none') {
+                _stageElem.hide();
+                $('#player-base').addClass('no-spin');
+                $('.player-alert').html('Your stage has the "Center Stage" option set, please disable that option in Edge Animate.').show();
+                return;
+            }
+
+            // Call layoutReady() after the DOM is built. This setTimeout usage is a trick to
+            // ensure that the DOM is built and we can query things like element widths.
+            window.setTimeout(layoutReady, 0);
         }
 
         function layoutReady() {
+
             // Cache frequently used elements
-            _playerBase = $('#player-base');
-            _playerContent = $('.player-content');
             _playerControls = $('.player-controls');
             _playButton = $('.player-play-button');
             _muteButton = $('.player-mute-button');
@@ -194,10 +205,6 @@
 
             if (_options.hideFullScreenButton)
                 $('.player-fullscreen-button').remove();
-
-            // Reparent the animation div
-            _playerContent.append(_stageElem);
-            _playerBase.unwrap();
 
             _baseContentHeight = _playerContent.height();
             _baseContentWidth = _playerContent.width();
@@ -296,6 +303,8 @@
 
             //hide loading spinner
             $('.player-container').removeClass('player-container');
+
+            trigger('playerDOMReady', null);
         }
 
         // -- CORE FUNCTIONALITY ----------------------------------
@@ -338,6 +347,7 @@
                 }
 
                 _keyframeElapsed = _keyframeElapsed + 1;
+
             }
 
             _progressBar.width(currentTime/_options.duration * 100 + '%');

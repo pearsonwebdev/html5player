@@ -98,15 +98,15 @@ var app = (function($){
         _flowWideParent = $('#Stage_FlowWideParentiOS');
         _flowCloseUpParent = $('#Stage_FlowCloseUpParentiOS');
         
-        _flowFramesWide = _flowWideParent.texturesheetanim({src:'./images/FlowFramesWideiOS.png', columns: 6, rows: 4, frames: 24, frameRate: 12, cellWidth: 320, cellHeight: 240}).data('texturesheetanim');
-        _flowFramesCloseUp = _flowCloseUpParent.texturesheetanim({src:'./images/FlowFramesCloseUpiOS.jpg', columns: 6, rows: 7, frames: 42, frameRate: 8, cellWidth: 320, cellHeight: 240}).data('texturesheetanim');
+        _flowFramesWide = _flowWideParent.texturesheetanim({src:'./images/FlowFramesWideiOS.png', columns: 6, rows: 4, frames: 24, frameRate: 12, cellWidth: 320, cellHeight: 240}).data('ui-texturesheetanim');
+        _flowFramesCloseUp = _flowCloseUpParent.texturesheetanim({src:'./images/FlowFramesCloseUpiOS.jpg', columns: 6, rows: 7, frames: 42, frameRate: 8, cellWidth: 320, cellHeight: 240}).data('ui-texturesheetanim');
       }
       else {
         _flowWideParent = $('#Stage_FlowWideParent');
         _flowCloseUpParent = $('#Stage_FlowCloseUpParent');
 
-        _flowFramesWide = _flowWideParent.texturesheetanim({src:'./images/FlowFramesWide.png', columns: 6, rows: 4, frames: 24, frameRate: 12,cellWidth: 640, cellHeight: 480}).data('texturesheetanim');
-        _flowFramesCloseUp = _flowCloseUpParent.texturesheetanim({src:'./images/FlowFramesCloseUp.jpg', columns: 6, rows: 7, frames: 42, frameRate: 8, cellWidth: 640, cellHeight: 480}).data('texturesheetanim');
+        _flowFramesWide = _flowWideParent.texturesheetanim({src:'./images/FlowFramesWide.png', columns: 6, rows: 4, frames: 24, frameRate: 12,cellWidth: 640, cellHeight: 480}).data('ui-texturesheetanim');
+        _flowFramesCloseUp = _flowCloseUpParent.texturesheetanim({src:'./images/FlowFramesCloseUp.jpg', columns: 6, rows: 7, frames: 42, frameRate: 8, cellWidth: 640, cellHeight: 480}).data('ui-texturesheetanim');
       }
 
       // replace svgs with pngs
