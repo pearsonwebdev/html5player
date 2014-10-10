@@ -225,13 +225,11 @@
                     _safariTimeSliderDiff = 42;
                 }
 
-                // Start our Safari audioFix kludge (ios 6 and earlier)
+                // Start our Safari audioFix kludge
                 if (navigator.vendor && navigator.vendor.match(/Apple/i)) {
-                    if (Number(navigator.userAgent.match(/Version\/(\d)\..*/)[1]) < 7) {
-                        playAudio();
-                        pauseAudio();
-                        _useAudioKludge = true;
-                    }
+                    playAudio();
+                    pauseAudio();
+                    _useAudioKludge = true;
                 }
 
                 // use kludge on Windows Vista IE9 
