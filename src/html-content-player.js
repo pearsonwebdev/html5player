@@ -28,11 +28,15 @@
 'use strict';
 (function() {
 
-    // Get the current path of this file. Used to load other dependent files like the player structure html.
-    // In the moment when the current script is being executed, it will be the last script element in the DOM
-    var scripts = document.getElementsByTagName('script');
-    var _jsPath = scripts[scripts.length-1].src;
-    _jsPath = _jsPath.replace(/[^\/]*$/,'');
+    // Hide the stage content until player is loaded, this eliminates flashing.
+    // We are doing this in javascript so that the contents are not hidden in 
+    // Adobe Edge's authoring environment.
+    if (!window.edge_authoring_mode) {
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = '.player-container > div { display: none; }';
+        document.getElementsByTagName('head')[0].appendChild(style);
+    }
 
     window.HtmlContentPlayer = function(args) {
 

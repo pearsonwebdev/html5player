@@ -3,10 +3,6 @@
   position: relative;
 }
 
-.player-container > div {
-  display: none;
-}
-
 /* Spinner --------------------*/
 .player-container:before {
   content: "";
