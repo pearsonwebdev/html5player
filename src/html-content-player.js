@@ -65,7 +65,7 @@
         var _options = $.extend({}, defaults, args);
 
         if (!_options.duration ) {
-            throw(': Please set the htmlcontentplayer\'s "duration" property manually to the length of the audio track in seconds');
+            throw(': Please set the htmlcontentplayer\'s "duration" property manually to the length of the audio track or animation (in seconds)');
         }
 
         if (!_options.animation) {
@@ -135,21 +135,32 @@
             _playerBase.unwrap();
 
             // Check if Stage has "Responsive Scaling" set
-            if (_stage.options.data.scaleToFit !== undefined && _stage.options.data.scaleToFit !== 'none') {
+            if (_stage.data.stage.scaleToFit !== undefined && _stage.data.stage.scaleToFit !== 'none') {
                 _stageElem.hide();
-                $('#player-base').addClass('no-spin');
-                $('.player-alert').html('Your stage has "Responsive Scaling" set, please disable that option in Edge Animate.').show();
+                window.alert('Your stage has "Responsive Scaling" set, please disable that option in Edge Animate.');
                 return;
             }
 
-            // Check if Stage has "Center Stage" set
-            if (_stage.options.data.centerStage !== undefined && _stage.options.data.centerStage !== 'none') {
-                _stageElem.hide();
-                $('#player-base').addClass('no-spin');
-                $('.player-alert').html('Your stage has the "Center Stage" option set, please disable that option in Edge Animate.').show();
-                return;
-            }
+            try {
 
+                // Check if Stage has "Center Stage" set
+                if (_stage.data.stage.centerStage !== undefined && _stage.data.stage.centerStage !== 'none') {
+                    _stageElem.hide();
+                    window.alert('Your stage has the "Center Stage" option set, please disable that option in Edge Animate.');
+                    return;
+                }
+
+                // Check if Stage has "Center Stage" set
+                if (_stage.data.stage.centerStage !== undefined && _stage.data.stage.centerStage !== 'none') {
+                    _stageElem.hide();
+                    window.alert('Your stage has the "Center Stage" option set, please disable that option in Edge Animate.');
+                    return;
+                }
+
+            }
+            catch(e) {
+                console.log('Edge stage not found');
+            }
             // Call layoutReady() after the DOM is built. This setTimeout usage is a trick to
             // ensure that the DOM is built and we can query things like element widths.
             window.setTimeout(layoutReady, 0);
@@ -243,8 +254,8 @@
             }
             else if (_options.isAdobeEdge && window.AdobeEdge) {
                 // Since there is no audio in this condition, listen to stage events
-                window.AdobeEdge.Symbol.bindTimelineAction(_stage.getComposition().compId, 'stage', 'Default Timeline', 'update', timeUpdated);
-                window.AdobeEdge.Symbol.bindTimelineAction(_stage.getComposition().compId, 'stage', 'Default Timeline', 'complete', playEnded);
+                window.AdobeEdge.Symbol.bindTimelineAction(_stage.getComposition().getCompId(), 'stage', 'Default Timeline', 'update', timeUpdated);
+                window.AdobeEdge.Symbol.bindTimelineAction(_stage.getComposition().getCompId(), 'stage', 'Default Timeline', 'complete', playEnded);
                 $('.player-vol-button').remove();
             }
             else {
@@ -327,7 +338,7 @@
                     return;
                 }
 
-                // Keep audio and video in sync.  We're essentially using a similar technique
+                // Keep audio and video in sync. We're essentially using a similar technique
                 // that real video uses. Every so often the player will sync the video to the
                 // audio's current time. Real video stores a keyframe value that says how many
                 // frames are between these syncs. We are using a set value of 40, which works
@@ -374,7 +385,6 @@
             } catch(e) {
                 console.log('error during timeUpdated:', e);
             }
-
         }
 
         // --- gotoTimeAsPercentage() ----------------
@@ -484,7 +494,6 @@
         }
 
         function playEnded(symbol, event) {
-        
             // For some reason, Edge triggers the "complete" event when its 
             // first told to play. Lets look for that and return if so.
             if (event && event.elapsed === 0) return;
@@ -550,7 +559,7 @@
             }
         }
 
-        // Adobe Edge specific stop with support for symbol use cases
+        // Adobe Edge-specific stop with support for symbol use cases
         // stopAll is also used when seeking.
         function stopAll(newTime, symbol) {
             symbol = symbol || _stage;
@@ -618,15 +627,21 @@
             var triggerPositions = {};
 
             // get all of the timelines for this symbol, sort them by "position", aka time.
-            var timelines = symbol.timelines['Default Timeline'].timeline.sort();
-
+            //var timelines = symbol.data[symbol.name].timeline.data.sort(); //symbol.timelines['Default Timeline'].timeline.sort();
+            var timelines = getTimelineData(symbol).sort(); //symbol.timelines['Default Timeline'].timeline.sort();
+            
             // Loop through timelines and act on triggers
             for (var i = 0, length = timelines.length; i < length; i++) {
                 var timeline = timelines[i];
-                if (!timeline.trigger) continue; // skip tweens
+
+                if (timeline[1] !== 'trigger') continue; // skip tweens
 
                 // Get the trigger data, this is somewhat brittle but Edge does not give us helpers to retrieve this info.
-                var triggerData = timeline.trigger[1];
+                var triggerData = timeline[4];
+
+                if (!triggerData) {
+                    continue;
+                }
 
                 // Get the action (play, stop) from the trigger. How we are doing this is brittle. Unfortunately Edge does not give us any helpers here.
                 var triggerAction = triggerData[0];
@@ -638,8 +653,10 @@
                 // Is it playing in reverse?
                 var isReverse = (triggerAction === 'playReverse');
 
+                var timelinePosition = timeline[2];
+
                 if (isReverse) {
-                    revSymbolPositions[selector] = timeline.position;
+                    revSymbolPositions[selector] = timelinePosition;
                 }
 
                 // PLAY & PLAY REVERSE ACTIONS ---------
@@ -648,28 +665,26 @@
                     // index 2 is the playFrom time or label, in most cases this is 0
                     var playFromTime = getPlayFromOrStopAtTime(triggerSymbol, triggerData[2]);
 
-                    var timelineStart = timeline.position - playFromTime;
+                    var timelineStart = timelinePosition - playFromTime;
                     var timelineEnd = timelineStart + triggerSymbol.getDuration();
 
                     triggerPositions[selector] = timelineStart;
 
                     // if the newTime falls within the symbol, add the symbol to the array of symbols to play.
-                    if (newTime > timeline.position && newTime < timelineEnd) {
+                    if (newTime > timelinePosition && newTime < timelineEnd) {
 
                         playableSymbols[selector] = { symbol: triggerSymbol,
                                                       position: timelineStart,
                                                       isReverse: isReverse };
                     }
                     // if the newTime is before the symbol, set the symbol time to 0
-                    else if (newTime <= timeline.position) {
+                    else if (newTime <= timelinePosition) {
                         var beforeTime = (isReverse) ? triggerSymbol.getDuration() : 0;
-                        triggerSymbol.seek(beforeTime);
                         stopAllChildSymbols(triggerSymbol, beforeTime);
                     }
                     // if the newTime is after the symbol, set the symbol time to the duration
                     else if (newTime >= timelineEnd) {
                         var afterTime = (isReverse) ? 0 : triggerSymbol.getDuration();
-                        triggerSymbol.seek(afterTime);
                         stopAllChildSymbols(triggerSymbol, afterTime);
                     }
                 }
@@ -677,7 +692,7 @@
                 // STOP ACTION --------------------
                 if (triggerAction === 'stop') {
 
-                    if (newTime > timeline.position) {
+                    if (newTime > timelinePosition) {
 
                         var playTime = triggerPositions[selector] || 0;
 
@@ -688,15 +703,15 @@
                         var stopAtTime = getPlayFromOrStopAtTime(triggerSymbol, triggerData[2]);
 
                         // position to stop at
-                        var symbolPosition = (stopAtTime > 0) ? stopAtTime : timeline.position - playTime;
+                        var symbolPosition = (stopAtTime > 0) ? stopAtTime : timelinePosition - playTime;
 
                         // If symbol is playing in reverse figure out the stop time.
                         if (revSymbolPositions[selector]) {
-                            symbolPosition = triggerSymbol.getDuration() - timeline.position + revSymbolPositions[selector];
+                            symbolPosition = triggerSymbol.getDuration() - timelinePosition + revSymbolPositions[selector];
                         }
 
                         // Make symbol's time match the stop trigger time
-                        triggerSymbol.seek(symbolPosition);
+                        triggerSymbol.stop(symbolPosition);
                     }
                 }
 
@@ -712,7 +727,7 @@
                 // The actual value is also an array, we'll use index 0. I've never been able to produce a usecase where it contains more than a single value.
                 if (typeof data[0] === 'string') {
                     // look up the label
-                    var labels = triggerSymbol.getTimelineData('Default Timeline').labels;
+                    var labels = getTimelineDefn(triggerSymbol).labels;
                     if (labels) {
                         return labels[data[0]];
                     }
@@ -720,6 +735,15 @@
                 return data[0];
             }
             return 0;
+        }
+
+        function getTimelineData(sym) {
+            var s = sym.data[sym.name];
+            return s.timeline ? s.timeline.data : null;
+        }
+
+        function getTimelineDefn(sym) {
+            return sym.data[sym.name].timeline;
         }
 
         function stopAllChildSymbols(symbol, time) {

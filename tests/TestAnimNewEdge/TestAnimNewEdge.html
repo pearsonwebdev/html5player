@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+	<title>Untitled</title>
+<!--Adobe Edge Runtime-->
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <script type="text/javascript" charset="utf-8" src="edge_includes/edge.5.0.0.min.js"></script>
+    <style>
+        .edgeLoad-EDGE-66467507 { visibility:hidden; }
+    </style>
+<script>
+   AdobeEdge.loadComposition('TestAnimNewEdge', 'EDGE-66467507', {
+    scaleToFit: "none",
+    centerStage: "none",
+    minW: "0",
+    maxW: "undefined",
+    width: "550px",
+    height: "400px"
+}, {dom: [ ]}, {dom: [ ]});
+</script>
+<!--Adobe Edge Runtime End-->
+
+  <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+
+  <!-- HTML5 Player Styles and Code ............ -->
+  <link href="../../release/html-content-player.min.css" rel="stylesheet" />
+  <script src="../../release/html-content-player.min.js"></script>
+
+</head>
+<body style="margin:0;padding:0;">
+
+<div class="player-container">
+	<div id="Stage" class="EDGE-66467507"></div>
+</div>
+
+<script>
+      (function(){
+
+        AdobeEdge.bootstrapCallback(function (compId) {
+          var stage = AdobeEdge.getComposition(compId).getStage();
+          var player = new HtmlContentPlayer({duration: 4, 
+                                              animation: stage});
+        });
+
+      })();
+</script>
+
+</body>
+</html>
