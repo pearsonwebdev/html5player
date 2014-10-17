@@ -627,8 +627,7 @@
             var triggerPositions = {};
 
             // get all of the timelines for this symbol, sort them by "position", aka time.
-            //var timelines = symbol.data[symbol.name].timeline.data.sort(); //symbol.timelines['Default Timeline'].timeline.sort();
-            var timelines = getTimelineData(symbol).sort(); //symbol.timelines['Default Timeline'].timeline.sort();
+            var timelines = getTimelineData(symbol).sort();
             
             // Loop through timelines and act on triggers
             for (var i = 0, length = timelines.length; i < length; i++) {
