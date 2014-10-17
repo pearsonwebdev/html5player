@@ -104,4 +104,4 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // aliases for commonl
    })("sym-reverse-partial");
    //Edge symbol end:'sym-reverse-partial'
 
-})(jQuery, AdobeEdge, "EDGE-126256608");
+})(window.jQuery || AdobeEdge.$, AdobeEdge, "EDGE-126256608");

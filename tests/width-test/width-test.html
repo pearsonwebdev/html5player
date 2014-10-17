@@ -12,15 +12,20 @@
 
 <!--Adobe Edge Runtime-->
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <script type="text/javascript" charset="utf-8" src="width-test_edgePreload.js"></script>
+    <script type="text/javascript" charset="utf-8" src="edge_includes/edge.5.0.0.min.js"></script>
     <style>
         .edgeLoad-EDGE-342396983 { visibility:hidden; }
-        .player-container { max-width: 800px; }
-        .text {
-          margin: 20px;
-          max-width: 638px;
-        }
     </style>
+<script>
+   AdobeEdge.loadComposition('width-test', 'EDGE-342396983', {
+    scaleToFit: "none",
+    centerStage: "none",
+    minW: "0",
+    maxW: "undefined",
+    width: "800",
+    height: "400"
+}, {"dom":[]}, {"dom":[]});
+</script>
 <!--Adobe Edge Runtime End-->
 
 </head>

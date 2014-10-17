@@ -377,4 +377,4 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // aliases for commonl
    })("sym_twenty_five");
    //Edge symbol end:'sym_twenty_five'
 
-})(jQuery, AdobeEdge, "EDGE-40695230");
+})(window.jQuery || AdobeEdge.$, AdobeEdge, "EDGE-40695230");

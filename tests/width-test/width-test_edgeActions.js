@@ -40,4 +40,4 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // aliases for commonl
    })("sym_three");
    //Edge symbol end:'sym_three'
 
-})(jQuery, AdobeEdge, "EDGE-342396983");
+})(window.jQuery || AdobeEdge.$, AdobeEdge, "EDGE-342396983");

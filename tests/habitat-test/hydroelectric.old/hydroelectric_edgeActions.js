@@ -16,4 +16,4 @@
 (function(symbolName){})("static_electricity");
    //Edge symbol end:'static_electricity'
 
-})(window.jQuery || AdobeEdge.$, AdobeEdge, "EDGE-179879352");
+})(jQuery, AdobeEdge, "EDGE-179879352");

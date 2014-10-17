@@ -73,4 +73,4 @@ var Composition = Edge.Composition, Symbol = Edge.Symbol; // aliases for commonl
    })("labels_symb");
    //Edge symbol end:'labels_symb'
 
-})(jQuery, AdobeEdge, "EDGE-15288829");
+})(window.jQuery || AdobeEdge.$, AdobeEdge, "EDGE-15288829");
