@@ -40,6 +40,12 @@
 
     window.HtmlContentPlayer = function(args) {
 
+        // Quick exit if we're in the Edge authoring mode.
+        if (window.edge_authoring_mode) {
+            $('.player-container').removeClass('player-container');
+            return;
+        }
+
         var defaults = {
             animation: null, // animation's stage (required)
             duration: null,        // in seconds (required)

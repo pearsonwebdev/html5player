@@ -1,6 +1,8 @@
 {
   "name": "html5-player",
-  "version": "1.4.0",
+
+  "version": "1.4.1",
+
   "devDependencies": {
     "grunt": "~0.4.4",
     "grunt-bump": "0.0.13",

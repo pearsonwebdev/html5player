@@ -51,23 +51,34 @@
           <a class="internal-link" name="Setup"></a> 
           <h3>Setup</h3>
 
-          <p>In some cases you will start with the pre-built template page, but below walks through the setup of the player on a any page.</p>
-
-          <p><strong>Please note:</strong> After setup, if you are unable to see your animation in Adobe Edge, close and reopen Edge.</p>
+          <p class="important"><strong>Please note:</strong> After setup, if you are unable to see your animation in Adobe Edge, close and reopen Edge.</p>
 
           <h4>Including Files</h4>
 
+          <div><small><strong>CSS</strong></small></div>
           <pre>
             <code data-language="html">
+    <!-- IMPORTANT: Include the CSS file BEFORE the Adobe Edge Runtime Lines -->
+
+    <!-- Player CSS file -->
+    <link href="//media.pearsoncmg.com/bc/bc_0global/html5-player/1.4/html-content-player.min.css" rel="stylesheet"></code>
+          </pre>
+
+          <div><strong>Javascript</strong></div>
+          <pre>
+            <code data-language="html">
+  <!-- IMPORTANT: Include these files AFTER the Adobe Edge Runtime lines -->
+
   <!-- JQuery is required for the player -->
   <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js" ></script>
 
-  <!-- HTML 5 Content player includes --> 
-  <link href="//media.pearsoncmg.com/bc/bc_0global/html5-player/1.4/html-content-player.min.css" rel="stylesheet" />
+  <!-- Player javascript file --> 
   <script src="//media.pearsoncmg.com/bc/bc_0global/html5-player/1.4/html-content-player.min.js"></script></code>
           </pre>
 
-          <p>Include jQuery and the two player files on your HTML page.  Please note that we have version 1.4 in the path.  While we will attempt to keep this documentation up-to-date, please talk to someone at Peason to determine if there is a newer version.</p>
+          <p>Include the player's CSS file BEFORE the Adobe Edge Runtime Lines. Then include jQuery and the player's Javascript AFTER the Adobe Edge Runtime Lines.  The position of these files with respect to the AdobeEdge Runtime lines is very important. Otherwise, <strong>you will not see your animation within Adobe Edge Animate</strong>.</p>
+
+          <p>Please note that we have version 1.4 in the path.  While we will attempt to keep this documentation up-to-date, please talk to someone at Peason to determine if there is a newer version.</p>
 
           <p>Including the files like we have above should provide the best experience with Adobe Edge.  You should be able to use Edge's "Preview in a Browser" feature and have your animation appear within the player.</p>
 
