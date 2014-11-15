@@ -154,7 +154,8 @@
                                       hideVolButton: false,
                                       hideCCButton: false,
                                       hideFullScreenButton: false,
-                                      isAdobeEdge: true, // true is default});</code>
+                                      fullScreen: true,
+                                      isAdobeEdge: true // true is default});</code>
           </pre>
 
           <p>For a full description of these options see <a href="#Properties">player properties</a> below in the API reference.  Please note that <em>autoPlay</em> should never be true in a production environment.  It is strictly a development property.  Accessibility guidelines says that it is a no-no, and iOS has significant issues in supporting autoplaying audio through HTML or Javascript.</p>
@@ -411,6 +412,8 @@
 
               <li><b>hideFullScreenButton</b><br>Hides the <em>Full Screen</em> button from showing in the controls section of the player.</li>
 
+              <li><b>fullScreen</b><br>When integrating into an iFrame, such as for the Habitat environment, set fullScreen to <em>true</em>.  This will force the player to be fullscreen, but since its contained inside an iframe, it will fill the iframe's extents and resize with it.</li>
+
               <li><b>isAdobeEdge</b><br>This is true by default. It turns on support for Adobe Edge Symbol playback and seeking.</li>
 
             </ul>
@@ -419,20 +422,22 @@
           <pre>
             <code data-language="javascript">
   var player = new HtmlContentPlayer({duration: 220, 
-                                     animation: stage,
-                                     audio: ['Narration.ogg', 'Narration.mp3'],
-                                     srt:'./images/Narration.srt',
-                                     poster: './images/poster.jpg',
-                                     autoPlay: false, 
-                                     showControls: true,
-                                     showTime: false,
-                                     mute: false,
-                                     triggerOnSync: false,
-                                     hidePrevButton: false,
-                                     hideNextButton: false,
-                                     hideVolButton: false,
-                                     hideCCButton: false,
-                                     hideFullScreenButton: false});</code>
+                                      animation: stage,
+                                      audio: ['Narration.ogg', 'Narration.mp3'],
+                                      srt:'./images/Narration.srt',
+                                      poster: './images/poster.jpg',
+                                      autoPlay: false, 
+                                      showControls: true,
+                                      showTime: false,
+                                      mute: false,
+                                      triggerOnSync: false,
+                                      hidePrevButton: false,
+                                      hideNextButton: false,
+                                      hideVolButton: false,
+                                      hideCCButton: false,
+                                      hideFullScreenButton: false,
+                                      fullScreen: true,
+                                      isAdobeEdge: true // true is default});</code>
           </pre>
 
           <br>
